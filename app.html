@@ -1,314 +1,289 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="si">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Rashu Web Source Viewer</title>
-  <meta name="description" content="Paste a URL and view the page's HTML source (uses a CORS proxy)." />
-
-  <!-- Prism for syntax highlighting -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
-
-  <style>
-    :root {
-      --bg: #0a0a0a;
-      --card: #0a0a0a;
-      --muted: #9aa4b2;
-      --accent: #00ff66;
-    }
-
-    body {
-      font-family: Inter, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      margin: 0;
-      background: var(--bg);
-      color: #e6eef6;
-      animation: bgMove 12s infinite alternate;
-    }
-
-   @keyframes bgMove {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 100% 100%; }
-  }
-  
-  
-    .wrap {
-      max-width: 980px;
-      margin: 28px auto;
-      padding: 20px;
-    }
-
-    .image {
-      text-align: center;
-      margin-bottom: 8%;
-    }
-
-    .image > img {
-      width: 100px;
-      border-radius: 50%;
-      box-shadow: 0 0 15px rgba(0,255,100,0.3);
-    }
-
-    .image > h2 {
-      color: #00FF00;
-      text-shadow: 0 0 8px #00FF00;
-      animation: flicker 3s infinite;
-    }
-      
- @keyframes flicker {
-    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-    20%, 24%, 55% { opacity: 0.4; }
-  }
-  
-    .card {
-      background: var(--card);
-      padding: 18px;
-      border-radius: 14px;
-      box-shadow: 6px 6px 12px #000,
-                  -6px -6px 12px #1c1c1c;
-      animation: fadeIn 1.2s ease;
-    }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
-  }
-  
-  
-  
-    .controls {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    input[type=text] {
-      flex: 1;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: #0a0a0a;
-      color: inherit;
-      outline: none;
-      transition: 0.3s;
-    }
-
-    input[type=text]:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 6px #00FF00;
-    }
-
-    button {
-      padding: 10px 14px;
-      border-radius: 8px;
-      border: none;
-      background: #0a0a0a;
-      color: var(--accent);
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 6px 6px 12px #000,
-                  -6px -6px 12px #1c1c1c;
-      transition: 0.25s;
-    }
-
-    button:hover {
-      box-shadow: inset 6px 6px 12px #000,
-                  inset -6px -6px 12px #1c1c1c;
-      transform: scale(0.97);
-      color: #00ff99;
-    }
-
-    .options {
-      margin-top: 10px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    label {
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .result {
-      margin-top: 18px;
-    }
-
-    pre {
-      max-height: 560px;
-      overflow: auto;
-      border-radius: 8px;
-      padding: 14px;
-      background: #111;
-      color: #00ff99;
-    }
-
-    .meta {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-top: 8px;
-      color: #9aa4b2;
-      font-size: 13px;
-    }
-
-    footer {
-      margin-top: 18px;
-      color: #444;
-      font-size: 13px;
-      font-weight: 600; 
-      text-align: center;
-    }
-
-    .error {
-      color: #ffb4b4;
-    }
-
-    @media (max-width: 640px) {
-      .wrap {
-        padding: 12px;
-      }
-      .controls {
-        flex-direction: column;
-      }
-      button {
-        width: 100%;
-      }
-    }
-  
-  
-    /* Copy button inside result box */
-    .copy-btn {     
-      background: #0a0a0a;
-      border: none;
-      color: var(--accent);
-      padding: 6px 11px;
-      margin-left: 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 13px;
-      box-shadow: 3px 3px 6px #000,
-                  -3px -3px 6px #1c1c1c;
-    }
-  
-  
-  </style>
-</head>
-
-<body>
-  <div class="wrap">
-    <div class="card" style="margin-top:12px">
-      <div class="image">
-        <img src="https://i.ibb.co/21KQvsvr/20260110-222028-2.jpg" alt="ASHIYA-LOGO"/>
-        <h2>CYBER RUSH HTML WEB VIEWER V1</h2>
-      </div>
-      
-      <div class="controls">
-        <input id="urlInput" type="text" placeholder="https://example.com" value="https://example.com" />
-        <button id="fetchBtn">Load Source</button>       
-      </div>
-
-      <div class="options">
-        <label><input id="useProxy" type="checkbox" checked /> Use public CORS proxy</label>
-        <label><input id="showRaw" type="checkbox" /> FULL HTML</label>
-        <div>
-        <button class="copy-btn" id="copyBtn">Copy</button>
-        </div>
-      </div>
-
-      <div class="meta" id="meta" style="display:none">
-        <div id="status"></div>
-        <div id="size"></div>
-        <div id="time"></div>
-      </div>
-
-      <div class="result">
-        <pre class="language-markup"><code id="codeBlock" spellcheck="false"><!-- Press "Load source" to fetch HTML --></code></pre>
-      </div>
-
-      <div id="error" class="meta error" style="display:none"></div>
-
-      <footer>
-        <div>
-         &copy; 2026 POWERED BY CYBER RUSH MODEZ🥷🇱🇰
-        </div>
-      </footer>
-    </div>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-  <script>
-    const urlInput = document.getElementById('urlInput');
-    const fetchBtn = document.getElementById('fetchBtn');
-    const codeBlock = document.getElementById('codeBlock');
-    const meta = document.getElementById('meta');
-    const statusEl = document.getElementById('status');
-    const sizeEl = document.getElementById('size');
-    const timeEl = document.getElementById('time');
-    const errorEl = document.getElementById('error');
-    const useProxy = document.getElementById('useProxy');
-    const showRaw = document.getElementById('showRaw');
-
-    function escapeHtml(str){
-      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    }
-
-    async function fetchSource(){
-      errorEl.style.display='none';
-      meta.style.display='none';
-      let url = urlInput.value.trim();
-      if(!url) return;
-      if(!/^https?:\/\//i.test(url)) url = 'http://' + url;
-
-      statusEl.textContent = 'Fetching...';
-      codeBlock.textContent = '';
-      Prism.highlightElement(codeBlock);
-      meta.style.display='flex';
-      const started = Date.now();
-
-      try{
-        let fetchUrl = url;
-        if(useProxy.checked){
-          fetchUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Rush - Ultimate Tools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-green: #23FF02;
+            --neon-red: #FF0202;
+            --neon-blue: #00E5FF;
+            --neon-yellow: #FFD700;
+            --neon-purple: #BC13FE;
+            --bg-color: #050505;
         }
 
-        const r = await fetch(fetchUrl);
-        const text = await r.text();
-        const ms = Date.now() - started;
-        statusEl.textContent = `HTTP ${r.status} ${r.statusText}`;
-        sizeEl.textContent = `${text.length.toLocaleString()} bytes`;
-        timeEl.textContent = `${ms} ms`;
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                linear-gradient(rgba(35, 255, 2, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(35, 255, 2, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+        }
 
-        codeBlock.textContent = showRaw.checked ? text : escapeHtml(text);
-        Prism.highlightElement(codeBlock);
+        /* --- LOADING OVERLAY --- */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 4000;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            font-family: 'Orbitron'; color: var(--neon-green);
+        }
+        .spinner {
+            width: 60px; height: 60px; border: 5px solid #111; border-top: 5px solid var(--neon-green);
+            border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 20px;
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-      } catch(err) {
-        errorEl.style.display='block';
-        errorEl.textContent = 'Error: ' + (err.message || err);
-        statusEl.textContent = '';
-      }
-    }
+        /* --- PREMIUM MODAL --- */
+        #premium-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 3000;
+            display: none; align-items: center; justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        .modal-content {
+            background: #0a0a0a; border: 2px solid var(--neon-purple); padding: 2.5rem;
+            border-radius: 15px; text-align: center; width: 85%; max-width: 350px;
+            box-shadow: 0 0 30px var(--neon-purple); animation: modalFade 0.3s ease;
+        }
+        @keyframes modalFade { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-content h2 { font-family: 'Orbitron'; color: var(--neon-purple); text-shadow: 0 0 10px var(--neon-purple); margin-bottom: 15px; }
+        .buy-btn {
+            background: rgba(188, 19, 254, 0.1); color: var(--neon-purple); border: 2px solid var(--neon-purple);
+            padding: 12px 30px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; border-radius: 5px;
+            width: 100%; margin-top: 15px; transition: 0.3s;
+        }
+        .buy-btn:hover { background: var(--neon-purple); color: black; box-shadow: 0 0 20px var(--neon-purple); }
+        .close-modal-btn { background: none; border: none; color: #555; cursor: pointer; text-decoration: underline; margin-top: 15px; }
 
-    fetchBtn.addEventListener('click', fetchSource);
-    urlInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') fetchSource(); });
-  
-//======== copy button  ============
-  async function copySource() {
-      const text = codeBlock.textContent;
-      if (!text.trim()) return;
-      try {
-        await navigator.clipboard.writeText(text);
-        copyBtn.textContent = 'Copied! ✅';
-        copyBtn.style.color = '#00ffaa';
-        setTimeout(() => {
-          copyBtn.textContent = 'Copy';
-          copyBtn.style.color = '';
-        }, 1500);
-      } catch (err) {
-        alert('Copy failed: ' + err);
-      }
-    }
-    copyBtn.addEventListener('click', copySource);
-  
-  </script>
+        /* --- SIDEBAR --- */
+        .menu-toggle {
+            position: fixed; top: 20px; left: 20px; z-index: 1000;
+            background: rgba(0, 0, 0, 0.6); border: 2px solid var(--neon-green); color: var(--neon-green);
+            width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;
+            border-radius: 8px; font-size: 2rem; cursor: pointer;
+        }
+        .sidebar {
+            position: fixed; top: 0; left: -300px; width: 280px; height: 100%;
+            background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(10px);
+            border-right: 2px solid var(--neon-green); z-index: 1001; transition: 0.4s;
+            display: flex; flex-direction: column; padding-top: 80px;
+        }
+        .sidebar.active { left: 0; }
+        .sidebar a { padding: 18px 25px; text-decoration: none; font-size: 1.1rem; color: white; display: block; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar a:hover { color: var(--neon-green); padding-left: 35px; border-left: 5px solid var(--neon-green); }
+        .sidebar .close-btn { position: absolute; top: 20px; right: 20px; font-size: 2.5rem; color: #555; cursor: pointer; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; display: none; opacity: 0; }
+        .overlay.active { display: block; opacity: 1; }
+
+        /* --- CONTAINER STYLES --- */
+        .container {
+            background: rgba(10, 10, 10, 0.85); padding: 2.5rem; border-radius: 15px;
+            border: 2px solid var(--neon-green); width: 90%; max-width: 450px; text-align: center;
+            backdrop-filter: blur(8px); position: relative; animation: fadeIn 0.4s ease-in-out;
+            box-shadow: 0 0 20px rgba(35, 255, 2, 0.2);
+        }
+        .report-theme { border-color: var(--neon-red); }
+        .otp-theme { border-color: var(--neon-blue); }
+        .deactivate-theme { border-color: var(--neon-yellow); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .hidden { display: none; }
+
+        h1 { font-family: 'Orbitron', sans-serif; color: var(--neon-green); font-size: 1.8rem; text-transform: uppercase; margin-bottom: 5px; text-shadow: 0 0 10px currentColor; }
+        p { color: #ccc; margin-bottom: 2rem; letter-spacing: 1px; }
+
+        .form-group { margin-bottom: 1.5rem; text-align: left; }
+        label { display: block; margin-bottom: 8px; font-weight: 700; color: var(--neon-green); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; }
+        .report-theme label { color: var(--neon-red); }
+        .otp-theme label { color: var(--neon-blue); }
+
+        input, select, textarea {
+            width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.5); border: 1px solid #333;
+            color: var(--neon-green); font-family: 'Rajdhani', sans-serif; font-size: 1.1rem;
+            font-weight: bold; border-radius: 5px; outline: none; box-sizing: border-box;
+        }
+        .report-theme input, .report-theme select, .report-theme textarea { color: var(--neon-red); }
+
+        .btn {
+            background: rgba(35, 255, 2, 0.1); color: var(--neon-green); border: 2px solid var(--neon-green);
+            padding: 15px; border-radius: 5px; width: 100%; font-family: 'Orbitron', sans-serif; font-weight: bold;
+            cursor: pointer; transition: 0.3s; text-transform: uppercase; margin-top: 15px;
+        }
+        .btn:hover { background: var(--neon-green); color: black; box-shadow: 0 0 20px var(--neon-green); transform: scale(1.02); }
+        .report-theme .btn { color: var(--neon-red); border-color: var(--neon-red); }
+        .otp-theme .btn { color: var(--neon-blue); border-color: var(--neon-blue); }
+        .btn-copy { border-color: #fff !important; color: #fff !important; background: transparent !important; }
+
+        .footer { margin-top: 25px; font-size: 0.8rem; color: #555; border-top: 1px solid #222; padding-top: 10px; }
+        .back-btn { position: absolute; top: 15px; left: 15px; background: none; border: none; color: #555; font-size: 1.2rem; cursor: pointer; }
+        #otp-log { height: 150px; overflow-y: auto; background: black; border: 1px solid #333; color: var(--neon-blue); font-family: monospace; font-size: 0.8rem; text-align: left; padding: 10px; margin-top: 15px; display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- LOADER -->
+    <div id="loader">
+        <div class="spinner"></div>
+        <div id="loader-text">PROCESSING SECURE REQUEST...</div>
+    </div>
+
+    <!-- PREMIUM ALERT -->
+    <div id="premium-modal">
+        <div class="modal-content">
+            <h2>PREMIUM USER</h2>
+            <p>මෙය භාවිතා කිරීමට නම් ඔබ Premium User කෙනෙකු විය යුතුය.</p>
+            <button class="buy-btn" onclick="location.href='premium.html'">BUY PREMIUM</button>
+            <br>
+            <button class="close-modal-btn" onclick="closePremiumModal()">Back Home</button>
+        </div>
+    </div>
+
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+    <div class="sidebar" id="sidebar">
+        <span class="close-btn" onclick="toggleMenu()">×</span>
+        <div style="padding: 20px; text-align: center; color: var(--neon-green); font-family: 'Orbitron'; border-bottom: 2px solid var(--neon-green);">CYBER RUSH</div>
+        <a href="#" onclick="showMenu()">🏠 HOME</a>
+        <a href="https://wa.me/message/5ZZGFAM3W5S4E1" target="_blank">👨‍💻 DEVELOPER CONTACT</a>
+        <a href="#" onclick="showOtp()">📨 OTP SPAMMER</a>
+        <a href="#" onclick="openPremiumAlert()">🔒 DEACTIVATE ACC</a>
+        <a href="https://t.me/rashu_modz0715" target="_blank">✈️ TELEGRAM</a>
+    </div>
+
+    <!-- MAIN MENU -->
+    <div id="main-menu" class="container">
+        <div style="font-size: 3rem; color: var(--neon-green);">⚡</div>
+        <h1>CYBER RUSH MODEZ</h1>
+        <p>SELECT ULTIMATE TOOL</p>
+        <button class="btn" onclick="showTool()">🔓 UNBANNED NUMBER</button>
+        <button class="btn" style="color:var(--neon-red); border-color:var(--neon-red);" onclick="showReport()">⚠️ BANNED NUMBER</button>
+        <button class="btn" style="color:var(--neon-blue); border-color:var(--neon-blue);" onclick="showOtp()">📨 OTP SPAMMER (150)</button>
+        <button class="btn" style="color:var(--neon-yellow); border-color:var(--neon-yellow);" onclick="openPremiumAlert()">🚫 DEACTIVATE ACCOUNT</button>
+        <div class="footer">BEST DEVELOPER CYBER RUSH MODEZ ⚕️ <br> SRI LANKA 🇱🇰</div>
+    </div>
+
+    <!-- UNBAN TOOL -->
+    <div id="tool-page" class="container hidden">
+        <button class="back-btn" onclick="showMenu()">❮ BACK</button>
+        <div style="font-size: 3rem; color: var(--neon-green);">☣️</div>
+        <h1>Unban Tool</h1>
+        <div class="form-group"><label>User Name</label><input type="text" id="unban-name" placeholder="YOUR NAME"></div>
+        <div class="form-group"><label>Number</label><input type="text" id="unban-phone" placeholder="+947XXXXXXXX"></div>
+        <div class="form-group"><label>Ban Type</label>
+            <select id="unban-reason">
+                <option value="Technical Error / Technical Glitch">Technical Error</option>
+                <option value="False Spam Detection">Spam Error</option>
+                <option value="Policy Violation Mistake">Policy Mistake</option>
+            </select>
+        </div>
+        <button class="btn" onclick="executeProcess('unban')">⚡ Execute Email</button>
+        <button class="btn btn-copy" onclick="copyText('unban')">💾 Copy Long Text</button>
+    </div>
+
+    <!-- BAN TOOL -->
+    <div id="report-page" class="container report-theme hidden">
+        <button class="back-btn" onclick="showMenu()">❮ BACK</button>
+        <div style="font-size: 3rem; color: var(--neon-red);">🚨</div>
+        <h1>Ban Tool</h1>
+        <div class="form-group"><label>Target Number</label><input type="text" id="report-phone" placeholder="+947XXXXXXXX"></div>
+        <div class="form-group"><label>Violation Type</label>
+            <select id="report-reason">
+                <option value="Harassment and Cyberbullying">Harassment</option>
+                <option value="Spam and Bulk Messaging">Spamming</option>
+                <option value="Fake Identity and Scams">Scam Account</option>
+            </select>
+        </div>
+        <button class="btn" onclick="executeProcess('report')">🔥 SEND REPORT</button>
+        <button class="btn btn-copy" onclick="copyText('report')">💾 Copy Long Text</button>
+    </div>
+
+    <!-- OTP TOOL -->
+    <div id="otp-page" class="container otp-theme hidden">
+        <button class="back-btn" onclick="showMenu()">❮ BACK</button>
+        <div style="font-size: 3rem; color: var(--neon-blue);">📨</div>
+        <h1>OTP Spammer</h1>
+        <input type="text" id="otp-phone" placeholder="947XXXXXXXX">
+        <button class="btn" onclick="executeProcess('otp')">🚀 START ATTACK (150)</button>
+        <div id="otp-log"></div>
+    </div>
+
+    <script>
+        const restricted = ["0750292806", "0778059333", "0764085107"];
+
+        function isBlocked(num) {
+            if (!num) return false;
+            let clean = num.replace(/\D/g, "");
+            for (let b of restricted) { if (clean.endsWith(b.substring(1))) { alert("RESTRICTION ACTIVE!"); return true; } }
+            return false;
+        }
+
+        // --- LONG EMAIL GENERATORS (150+ Words) ---
+        function getUnbanMsg() {
+            let phone = document.getElementById('unban-phone').value;
+            let name = document.getElementById('unban-name').value;
+            let reason = document.getElementById('unban-reason').value;
+            return `Dear WhatsApp Support Team,\n\nI am writing this formal appeal to request the immediate reinstatement of my WhatsApp account associated with the phone number ${phone}. My name is ${name}, and I have been an active and law-abiding user of WhatsApp for many years. Recently, I discovered that my account has been banned due to ${reason}, which I believe is a result of a technical error or an automated system mistake.\n\nI want to emphasize that I have always strictly followed the WhatsApp Terms of Service and Community Guidelines. This account is essential for my daily life, including my business communications and staying connected with my elderly family members. I have never sent spam messages, participated in unauthorized groups, or used modified versions of the application. The sudden loss of access is causing significant personal and professional distress. I request you to conduct a detailed human manual review of my account history to verify my compliance. I am a responsible user and committed to maintaining a safe environment. Please restore my communication service as soon as possible. Thank you for your professional consideration.\n\nBest Regards,\n${name}`;
+        }
+
+        function getReportMsg() {
+            let target = document.getElementById('report-phone').value;
+            let reason = document.getElementById('report-reason').value;
+            return `To the WhatsApp Trust and Safety Team,\n\nI am writing to officially report a severe violation of WhatsApp’s Community Guidelines by the user associated with the phone number ${target}. This account has been consistently engaging in harmful activities, specifically related to ${reason}. Such behavior is detrimental to the safe and positive messaging environment that your platform aims to provide for its global user base.\n\nI have observed this user sending unsolicited content, spreading misinformation, and engaging in suspicious activities that clearly breach your Terms of Service. This behavior is not only annoying but also potentially dangerous for vulnerable users. To protect the integrity of the platform and the safety of the community, I strongly urge your security team to investigate this account immediately. Based on the evidence of ongoing policy violations, I request that you take strict disciplinary action, including a permanent ban of this account from your services. Allowing such users to operate freely compromises the trust of law-abiding users. I trust your team will handle this report with the utmost urgency to maintain a secure ecosystem. Thank you for your commitment to safety.\n\nSincerely,\nA Concerned WhatsApp User`;
+        }
+
+        function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); }
+        function showMenu() { hideAll(); document.getElementById('main-menu').classList.remove('hidden'); }
+        function hideAll() { ['main-menu', 'tool-page', 'report-page', 'otp-page'].forEach(id => document.getElementById(id).classList.add('hidden')); }
+        function showTool() { hideAll(); document.getElementById('tool-page').classList.remove('hidden'); }
+        function showReport() { hideAll(); document.getElementById('report-page').classList.remove('hidden'); }
+        function showOtp() { hideAll(); document.getElementById('otp-page').classList.remove('hidden'); }
+        function openPremiumAlert() { document.getElementById('premium-modal').style.display = 'flex'; }
+        function closePremiumModal() { document.getElementById('premium-modal').style.display = 'none'; }
+
+        async function executeProcess(type) {
+            let phone = document.getElementById(type + '-phone').value;
+            if (type !== 'unban' && isBlocked(phone)) return;
+            if (!phone) { alert("Enter Number!"); return; }
+
+            if (type === 'otp') { startOtpAttack(phone); return; }
+
+            document.getElementById('loader').style.display = 'flex';
+            await new Promise(r => setTimeout(r, 2000));
+            document.getElementById('loader').style.display = 'none';
+
+            let body = (type === 'unban') ? getUnbanMsg() : getReportMsg();
+            let subject = (type === 'unban') ? "Account Reinstatement Appeal" : "Urgent: Violation Report";
+            window.location.href = `mailto:support@whatsapp.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        }
+
+        function copyText(type) {
+            let txt = (type === 'unban') ? getUnbanMsg() : getReportMsg();
+            navigator.clipboard.writeText(txt).then(() => alert("Detailed 150+ Words Text Copied!"));
+        }
+
+        async function startOtpAttack(phone) {
+            const logBox = document.getElementById('otp-log');
+            logBox.style.display = 'block'; logBox.innerHTML = `[+] Attack Initialized: ${phone}<br>`;
+            for (let i = 1; i <= 150; i++) {
+                await new Promise(r => setTimeout(r, 40));
+                logBox.innerHTML += `>> Sending OTP Request ${i}... SUCCESS<br>`;
+                logBox.scrollTop = logBox.scrollHeight;
+            }
+            alert("150 OTP Simulation Finished!");
+        }
+    </script>
 </body>
 </html>
