@@ -1,527 +1,314 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="si">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QUEEN RASHU App</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Noto+Sans+Sinhala:wght@400;700&display=swap');
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rashu Web Source Viewer</title>
+  <meta name="description" content="Paste a URL and view the page's HTML source (uses a CORS proxy)." />
 
-        :root {
-            --neon-color: #23FF02;
-            --bg-color: #000000;
-            --card-bg: rgba(20, 20, 20, 0.95);
-            --text-color: var(--neon-color);
-            --shadow-glow: 0 0 10px var(--neon-color), 0 0 20px rgba(35, 255, 2, 0.4);
-            --popup-bg: rgba(0, 0, 0, 0.95);
-        }
+  <!-- Prism for syntax highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
 
-        body.light-mode {
-            --bg-color: #f4f4f4;
-            --card-bg: #ffffff;
-            --text-color: #0a0a0a;
-            --shadow-glow: 0 0 10px rgba(0, 0, 0, 0.1);
-            --popup-bg: #ffffff;
-        }
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --card: #0a0a0a;
+      --muted: #9aa4b2;
+      --accent: #00ff66;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    body {
+      font-family: Inter, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      background: var(--bg);
+      color: #e6eef6;
+      animation: bgMove 12s infinite alternate;
+    }
 
-        body {
-            font-family: 'Poppins', 'Noto Sans Sinhala', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--neon-color);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            transition: background-color 0.5s ease;
-            overflow-x: hidden;
-        }
+   @keyframes bgMove {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+  }
+  
+  
+    .wrap {
+      max-width: 980px;
+      margin: 28px auto;
+      padding: 20px;
+    }
 
-        /* --- TOP NAVIGATION --- */
-        .top-nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px 20px;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 3000;
-            background: var(--bg-color);
-        }
+    .image {
+      text-align: center;
+      margin-bottom: 8%;
+    }
 
-        .nav-right-btns {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: center;
-        }
+    .image > img {
+      width: 100px;
+      border-radius: 50%;
+      box-shadow: 0 0 15px rgba(0,255,100,0.3);
+    }
 
-        .icon-btn {
-            background: transparent;
-            border: 2px solid var(--neon-color);
-            color: var(--neon-color);
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            font-size: 18px;
-            flex-shrink: 0;
-            box-shadow: var(--shadow-glow);
-        }
+    .image > h2 {
+      color: #00FF00;
+      text-shadow: 0 0 8px #00FF00;
+      animation: flicker 3s infinite;
+    }
+      
+ @keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+    20%, 24%, 55% { opacity: 0.4; }
+  }
+  
+    .card {
+      background: var(--card);
+      padding: 18px;
+      border-radius: 14px;
+      box-shadow: 6px 6px 12px #000,
+                  -6px -6px 12px #1c1c1c;
+      animation: fadeIn 1.2s ease;
+    }
 
-        .search-container {
-            flex-grow: 1;
-            margin: 0 15px;
-        }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  
+  
+  
+    .controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
 
-        #searchInput {
-            width: 100%;
-            padding: 10px 15px;
-            border-radius: 25px;
-            border: 2px solid var(--neon-color);
-            background: transparent;
-            color: var(--neon-color);
-            outline: none;
-            font-family: inherit;
-            box-shadow: var(--shadow-glow);
-        }
+    input[type=text] {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: #0a0a0a;
+      color: inherit;
+      outline: none;
+      transition: 0.3s;
+    }
 
-        /* --- MAIN CONTENT AREA --- */
-        .content-area {
-            margin-top: 130px; /* Adjusted for double buttons */
-            padding-bottom: 120px; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            overflow-y: auto;
-        }
+    input[type=text]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 6px #00FF00;
+    }
 
-        .app-container {
-            width: 90%;
-            max-width: 450px;
-            text-align: center;
-            opacity: 0;
-            transform: scale(0.9);
-            animation: showContent 0.5s ease-out forwards;
-            animation-delay: 3.2s;
-        }
+    button {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: none;
+      background: #0a0a0a;
+      color: var(--accent);
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 6px 6px 12px #000,
+                  -6px -6px 12px #1c1c1c;
+      transition: 0.25s;
+    }
 
-        @keyframes showContent {
-            100% { opacity: 1; transform: scale(1); }
-        }
+    button:hover {
+      box-shadow: inset 6px 6px 12px #000,
+                  inset -6px -6px 12px #1c1c1c;
+      transform: scale(0.97);
+      color: #00ff99;
+    }
 
-        .logo-main {
-            font-size: 22px;
-            font-weight: 700;
-            margin: 20px 0;
-            text-shadow: 0 0 10px var(--neon-color);
-        }
+    .options {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-        /* --- BUTTON LIST --- */
-        .btn-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+    label {
+      font-size: 13px;
+      color: var(--muted);
+    }
 
-        .play-store-btn {
-            display: flex;
-            align-items: center;
-            background: var(--card-bg);
-            border: 1px solid var(--neon-color);
-            border-radius: 15px;
-            padding: 12px;
-            text-decoration: none;
-            color: var(--neon-color);
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-glow);
-        }
+    .result {
+      margin-top: 18px;
+    }
 
-        .play-store-btn:hover {
-            transform: scale(1.02);
-            background: var(--neon-color);
-            color: #000;
-        }
+    pre {
+      max-height: 560px;
+      overflow: auto;
+      border-radius: 8px;
+      padding: 14px;
+      background: #111;
+      color: #00ff99;
+    }
 
-        .btn-img {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            object-fit: cover;
-            margin-right: 15px;
-            border: 1px solid var(--neon-color);
-        }
+    .meta {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 8px;
+      color: #9aa4b2;
+      font-size: 13px;
+    }
 
-        .btn-info { text-align: left; }
-        .btn-info .title { font-weight: 700; font-size: 16px; display: block; }
-        .btn-info .subtitle { font-size: 11px; opacity: 0.8; }
+    footer {
+      margin-top: 18px;
+      color: #444;
+      font-size: 13px;
+      font-weight: 600; 
+      text-align: center;
+    }
 
-        /* --- BOTTOM NAVIGATION BAR --- */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 75px;
-            background: var(--card-bg);
-            border-top: 2px solid var(--neon-color);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 3500;
-            box-shadow: 0 -5px 15px rgba(var(--neon-color), 0.2);
-            backdrop-filter: blur(10px);
-        }
+    .error {
+      color: #ffb4b4;
+    }
 
-        .nav-item {
-            text-decoration: none;
-            color: var(--neon-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 60px;
-            transition: 0.3s;
-        }
-
-        .nav-item i { font-size: 24px; }
-        .nav-item span { font-size: 10px; margin-top: 4px; font-weight: 600; }
-
-        .nav-center-wrapper {
-            position: relative;
-            width: 85px;
-            height: 85px;
-            margin-top: -45px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: var(--bg-color);
-            border-radius: 50%;
-            border: 2px solid var(--neon-color);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .center-img {
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-            object-fit: cover;
-            z-index: 5;
-            border: 2px solid var(--neon-color);
-        }
-
-        .processing-ring {
-            position: absolute;
-            width: 75px;
-            height: 75px;
-            border-radius: 50%;
-            border: 3px dashed var(--neon-color);
-            animation: spin 5s linear infinite;
-            z-index: 2;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* --- SPLASH SCREEN --- */
-        .splash-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #000;
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            z-index: 5000;
-            transition: 0.8s;
-        }
-
-        .splash-screen.hide {
-            opacity: 0; pointer-events: none; transform: translateY(-100%);
-        }
-
-        .splash-text { font-size: 30px; color: #23FF02; font-weight: 700; text-shadow: 0 0 15px #23FF02; }
-
-        /* --- POPUP MENU --- */
-        .popup-menu {
-            position: fixed;
-            top: 80px; right: 20px;
-            width: 220px;
-            background: var(--popup-bg);
-            border: 2px solid var(--neon-color);
-            border-radius: 15px;
-            padding: 15px;
-            z-index: 2999;
-            transform: scale(0);
-            transform-origin: top right;
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            opacity: 0;
-        }
-
-        .popup-menu.active { transform: scale(1); opacity: 1; }
-        .menu-link {
-            text-decoration: none; color: var(--neon-color);
-            padding: 10px; border: 1px solid var(--neon-color);
-            border-radius: 8px; margin-bottom: 8px; display: block;
-            text-align: center; font-size: 14px;
-        }
-
-        /* --- NEON MODAL ALERT --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(5px);
-            display: none; 
-            justify-content: center;
-            align-items: center;
-            z-index: 6000;
-        }
-
-        .modal-box {
-            width: 85%;
-            max-width: 320px;
-            background: #000;
-            border: 2px solid var(--neon-color);
-            border-radius: 20px;
-            padding: 30px 20px;
-            text-align: center;
-            box-shadow: 0 0 20px var(--neon-color);
-            transform: scale(0.7);
-            opacity: 0;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .modal-overlay.active { display: flex; }
-        .modal-overlay.active .modal-box { transform: scale(1); opacity: 1; }
-
-        .modal-box h2 {
-            font-size: 20px;
-            margin-bottom: 10px;
-            color: var(--neon-color);
-            text-shadow: 0 0 10px var(--neon-color);
-        }
-
-        .modal-box p {
-            font-size: 14px;
-            margin-bottom: 25px;
-            color: #fff;
-        }
-
-        .follow-btn {
-            display: block;
-            background: var(--neon-color);
-            color: #000;
-            padding: 12px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 700;
-            margin-bottom: 15px;
-            box-shadow: 0 0 15px var(--neon-color);
-            transition: 0.3s;
-        }
-
-        .follow-btn:hover { transform: scale(1.05); }
-
-        .skip-btn {
-            background: transparent;
-            border: 1px solid #555;
-            color: #888;
-            padding: 8px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
-            transition: 0.3s;
-        }
-
-    </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    @media (max-width: 640px) {
+      .wrap {
+        padding: 12px;
+      }
+      .controls {
+        flex-direction: column;
+      }
+      button {
+        width: 100%;
+      }
+    }
+  
+  
+    /* Copy button inside result box */
+    .copy-btn {     
+      background: #0a0a0a;
+      border: none;
+      color: var(--accent);
+      padding: 6px 11px;
+      margin-left: 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      box-shadow: 3px 3px 6px #000,
+                  -3px -3px 6px #1c1c1c;
+    }
+  
+  
+  </style>
 </head>
+
 <body>
+  <div class="wrap">
+    <div class="card" style="margin-top:12px">
+      <div class="image">
+        <img src="https://i.ibb.co/21KQvsvr/20260110-222028-2.jpg" alt="ASHIYA-LOGO"/>
+        <h2>CYBER RUSH HTML WEB VIEWER</h2>
+      </div>
+      
+      <div class="controls">
+        <input id="urlInput" type="text" placeholder="https://example.com" value="https://example.com" />
+        <button id="fetchBtn">Load Source</button>       
+      </div>
 
-    <!-- Splash Screen -->
-    <div class="splash-screen" id="splash">
-        <div class="splash-text">QUEEN RASHU</div>
-        <div style="color: #23FF02; margin-top: 15px;"><i class="fas fa-circle-notch fa-spin fa-2x"></i></div>
-    </div>
-
-    <!-- Neon Alert Modal -->
-    <div class="modal-overlay" id="followModal">
-        <div class="modal-box">
-            <h2>FOLLOW CHANNEL</h2>
-            <p>අලුත්ම තොරතුරු දැනගන්න අපගේ WhatsApp චැනලය හා සම්බන්ධ වන්න.</p>
-            <a href="https://whatsapp.com/channel/0029VaicB1MISTkGyQ7Bqe23" target="_blank" class="follow-btn">Follow Channel</a>
-            <button class="skip-btn" onclick="closeModal()">Skip</button>
+      <div class="options">
+        <label><input id="useProxy" type="checkbox" checked /> Use public CORS proxy</label>
+        <label><input id="showRaw" type="checkbox" /> FULL HTML</label>
+        <div>
+        <button class="copy-btn" id="copyBtn">Copy</button>
         </div>
-    </div>
+      </div>
 
-    <!-- Top Navigation -->
-    <div class="top-nav">
-        <button class="icon-btn" onclick="toggleTheme()">
-            <i class="fas fa-lightbulb" id="themeIcon"></i>
-        </button>
-        
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="සොයන්න (Search)..." onkeyup="filterButtons()">
+      <div class="meta" id="meta" style="display:none">
+        <div id="status"></div>
+        <div id="size"></div>
+        <div id="time"></div>
+      </div>
+
+      <div class="result">
+        <pre class="language-markup"><code id="codeBlock" spellcheck="false"><!-- Press "Load source" to fetch HTML --></code></pre>
+      </div>
+
+      <div id="error" class="meta error" style="display:none"></div>
+
+      <footer>
+        <div>
+         &copy; 2026 POWERED BY CYBER RUSH MODEZ🥷🇱🇰
         </div>
-
-        <!-- Right Side Buttons -->
-        <div class="nav-right-btns">
-            <button class="icon-btn" onclick="toggleMenu()">
-                <i class="fas fa-bars"></i>
-            </button>
-            <!-- New Color Change Button -->
-            <button class="icon-btn" id="rainbowBtn" onclick="toggleRainbow()" title="Change Color">
-                <i class="fas fa-palette"></i>
-            </button>
-        </div>
+      </footer>
     </div>
+  </div>
 
-    <!-- Popup Menu -->
-    <div class="popup-menu" id="popupMenu">
-        <a href="#" class="menu-link">Owner</a>
-        <a href="#" class="menu-link">WhatsApp Group</a>
-        <a href="#" class="menu-link">YouTube Channel</a>
-    </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script>
+    const urlInput = document.getElementById('urlInput');
+    const fetchBtn = document.getElementById('fetchBtn');
+    const codeBlock = document.getElementById('codeBlock');
+    const meta = document.getElementById('meta');
+    const statusEl = document.getElementById('status');
+    const sizeEl = document.getElementById('size');
+    const timeEl = document.getElementById('time');
+    const errorEl = document.getElementById('error');
+    const useProxy = document.getElementById('useProxy');
+    const showRaw = document.getElementById('showRaw');
 
-    <!-- Main Content -->
-    <div class="content-area">
-        <div class="app-container">
-            <div class="logo-main">QUEEN RASHU MENU</div>
+    function escapeHtml(str){
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
 
-            <div class="btn-list" id="buttonList">
-                <a href="#" class="play-store-btn" data-name="Rashu Bot">
-                    <img src="https://files.catbox.moe/q7a9q9.jpeg" class="btn-img">
-                    <div class="btn-info">
-                        <span class="title">RASHU BOT</span>
-                        <span class="subtitle">බොට් පද්ධතිය ක්‍රියාත්මක කරන්න</span>
-                    </div>
-                </a>
+    async function fetchSource(){
+      errorEl.style.display='none';
+      meta.style.display='none';
+      let url = urlInput.value.trim();
+      if(!url) return;
+      if(!/^https?:\/\//i.test(url)) url = 'http://' + url;
 
-                <a href="#" class="play-store-btn" data-name="Gallery">
-                    <img src="https://i.ibb.co/bGq4Qzd/IMG-20251217-WA0001.jpg" class="btn-img">
-                    <div class="btn-info">
-                        <span class="title">Gallery</span>
-                        <span class="subtitle">පින්තූර එකතුව බලන්න</span>
-                    </div>
-                </a>
+      statusEl.textContent = 'Fetching...';
+      codeBlock.textContent = '';
+      Prism.highlightElement(codeBlock);
+      meta.style.display='flex';
+      const started = Date.now();
 
-                <a href="#" class="play-store-btn" data-name="Updates">
-                    <img src="https://i.ibb.co/21KQvsvr/20260110-222028-2.jpg" class="btn-img">
-                    <div class="btn-info">
-                        <span class="title">New Updates</span>
-                        <span class="subtitle">අලුත්ම තොරතුරු</span>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bottom Navigation Bar -->
-    <div class="bottom-nav">
-        <a href="setting.html" class="nav-item">
-            <i class="fas fa-cog"></i>
-            <span>Settings</span>
-        </a>
-
-        <div class="nav-center-wrapper">
-            <div class="processing-ring"></div>
-            <img src="https://i.ibb.co/21KQvsvr/20260110-222028-2.jpg" alt="Center" class="center-img">
-        </div>
-
-        <a href="about.html" class="nav-item">
-            <i class="fas fa-user-shield"></i>
-            <span>About</span>
-        </a>
-    </div>
-
-    <script>
-        // --- Color Changing Logic ---
-        let rainbowInterval = null;
-        let colorIndex = 0;
-        const colors = [
-            "#23FF02", // Green (Default)
-            "#FF0000", // Red
-            "#00FFFF", // Cyan
-            "#FFFF00", // Yellow
-            "#FF00FF", // Magenta
-            "#FF8000", // Orange
-            "#0080FF", // Azure
-            "#FF007F", // Rose
-            "#8000FF", // Violet
-            "#FFFFFF"  // White
-        ];
-
-        function toggleRainbow() {
-            const btn = document.getElementById('rainbowBtn');
-            
-            if (rainbowInterval) {
-                // Stop the interval
-                clearInterval(rainbowInterval);
-                rainbowInterval = null;
-                // Reset to default color
-                document.documentElement.style.setProperty('--neon-color', "#23FF02");
-                btn.style.boxShadow = "0 0 10px #23FF02";
-            } else {
-                // Start cycling colors every 1.5 seconds (1500ms)
-                rainbowInterval = setInterval(() => {
-                    document.documentElement.style.setProperty('--neon-color', colors[colorIndex]);
-                    colorIndex = (colorIndex + 1) % colors.length;
-                }, 1500);
-                btn.style.boxShadow = "0 0 20px white";
-            }
+      try{
+        let fetchUrl = url;
+        if(useProxy.checked){
+          fetchUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
         }
 
-        // Hide Splash Screen & Show Neon Alert
+        const r = await fetch(fetchUrl);
+        const text = await r.text();
+        const ms = Date.now() - started;
+        statusEl.textContent = `HTTP ${r.status} ${r.statusText}`;
+        sizeEl.textContent = `${text.length.toLocaleString()} bytes`;
+        timeEl.textContent = `${ms} ms`;
+
+        codeBlock.textContent = showRaw.checked ? text : escapeHtml(text);
+        Prism.highlightElement(codeBlock);
+
+      } catch(err) {
+        errorEl.style.display='block';
+        errorEl.textContent = 'Error: ' + (err.message || err);
+        statusEl.textContent = '';
+      }
+    }
+
+    fetchBtn.addEventListener('click', fetchSource);
+    urlInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') fetchSource(); });
+  
+//======== copy button  ============
+  async function copySource() {
+      const text = codeBlock.textContent;
+      if (!text.trim()) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        copyBtn.textContent = 'Copied! ✅';
+        copyBtn.style.color = '#00ffaa';
         setTimeout(() => {
-            document.getElementById('splash').classList.add('hide');
-            setTimeout(() => {
-                document.getElementById('followModal').classList.add('active');
-            }, 500);
-        }, 3000);
-
-        function closeModal() {
-            document.getElementById('followModal').classList.remove('active');
-        }
-
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            const icon = document.getElementById('themeIcon');
-            if(document.body.classList.contains('light-mode')) {
-                icon.classList.replace('fa-lightbulb', 'fa-moon');
-            } else {
-                icon.classList.replace('fa-moon', 'fa-lightbulb');
-            }
-        }
-
-        function toggleMenu() {
-            document.getElementById('popupMenu').classList.toggle('active');
-        }
-
-        function filterButtons() {
-            let input = document.getElementById('searchInput').value.toLowerCase();
-            let buttons = document.getElementsByClassName('play-store-btn');
-            for (let i = 0; i < buttons.length; i++) {
-                let name = buttons[i].getAttribute('data-name').toLowerCase();
-                buttons[i].style.display = name.includes(input) ? "flex" : "none";
-            }
-        }
-
-        window.onclick = function(event) {
-            if (!event.target.closest('.icon-btn') && !event.target.closest('.popup-menu')) {
-                document.getElementById('popupMenu').classList.remove('active');
-            }
-        }
-    </script>
+          copyBtn.textContent = 'Copy';
+          copyBtn.style.color = '';
+        }, 1500);
+      } catch (err) {
+        alert('Copy failed: ' + err);
+      }
+    }
+    copyBtn.addEventListener('click', copySource);
+  
+  </script>
 </body>
 </html>
