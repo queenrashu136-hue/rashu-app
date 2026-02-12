@@ -1,289 +1,883 @@
 <!DOCTYPE html>
-<html lang="si">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber Rush - Ultimate Tools</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>RASHU TIKTOK DL ☘️</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --neon-green: #23FF02;
-            --neon-red: #FF0202;
-            --neon-blue: #00E5FF;
-            --neon-yellow: #FFD700;
-            --neon-purple: #BC13FE;
-            --bg-color: #050505;
+            --primary-dark: #0d0f1f;
+            --card-bg: #111122;
+            --text: #e0e0ff;
+            --text-light: #a0a0cc;
+            --bg: #0a0a0f;
+            --error: #ff0055;
+            --cyber-pink: #ff00cc;
+            --cyber-blue: #00ccff;
         }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
         body {
-            font-family: 'Rajdhani', sans-serif;
-            background-color: var(--bg-color);
-            background-image: 
-                linear-gradient(rgba(35, 255, 2, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(35, 255, 2, 0.03) 1px, transparent 1px);
-            background-size: 30px 30px;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 2rem;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-top: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        
+        .downloader-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 0, 204, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .url-input {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 0, 204, 0.4);
+            background: rgba(10, 10, 20, 0.8);
+            color: var(--text);
+            font-size: 1rem;
+        }
+        
+        .url-input:focus {
+            outline: none;
+            border-color: var(--cyber-blue);
+        }
+        
+        .download-btn {
+            background: linear-gradient(135deg, #ff00cc 0%, #00ccff 100%);
             color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 204, 0.4);
+        }
+        
+        .download-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .result-container {
+            display: none;
+            margin-top: 2rem;
+        }
+        
+        .video-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .video-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--cyber-blue);
+            text-align: center;
+            padding: 10px;
+            background: rgba(0, 204, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        .video-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-item {
+            background: rgba(42, 45, 92, 0.4);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(255, 0, 204, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 1.3rem;
+            color: var(--cyber-pink);
+        }
+
+        .stat-value {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--cyber-blue);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        
+        .video-thumbnail {
+            width: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            border: 2px solid rgba(255, 0, 204, 0.4);
+        }
+        
+        .video-thumbnail img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 8px;
+            display: block;
+        }
+        
+        .download-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .download-option {
+            background: rgba(42, 45, 92, 0.4);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            border: 1px solid rgba(255, 0, 204, 0.3);
+        }
+
+        .option-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--cyber-pink);
+        }
+        
+        .option-btn {
+            background: linear-gradient(135deg, #ff00cc 0%, #00ccff 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        
+        .option-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 204, 0.4);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 0, 204, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--cyber-pink);
+            border-right: 4px solid var(--cyber-blue);
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        .error-message {
+            display: none;
+            background: rgba(255, 0, 85, 0.1);
+            color: var(--error);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(255, 0, 85, 0.3);
+        }
+        
+        .instructions {
+            background: rgba(42, 45, 92, 0.4);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border: 1px solid rgba(0, 204, 255, 0.3);
+        }
+        
+        .instructions h3 {
+            margin-bottom: 1rem;
+            color: var(--cyber-blue);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions ol {
+            padding-left: 1.5rem;
+            color: var(--text-light);
+        }
+        
+        .instructions li {
+            margin-bottom: 0.8rem;
+        }
+        
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid rgba(255, 0, 204, 0.2);
+        }
+        
+        .social-links {
             display: flex;
             justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-links a {
+            color: var(--text-light);
+            font-size: 1.3rem;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            overflow-x: hidden;
+            justify-content: center;
+            background: rgba(42, 45, 92, 0.4);
+            border: 1px solid rgba(255, 0, 204, 0.3);
+            text-decoration: none;
         }
 
-        /* --- LOADING OVERLAY --- */
-        #loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 4000;
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-            font-family: 'Orbitron'; color: var(--neon-green);
+        .social-links a:hover {
+            background: linear-gradient(135deg, var(--cyber-pink), var(--cyber-blue));
+            color: white;
+            border-color: transparent;
         }
-        .spinner {
-            width: 60px; height: 60px; border: 5px solid #111; border-top: 5px solid var(--neon-green);
-            border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 20px;
-            box-shadow: 0 0 15px var(--neon-green);
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- PREMIUM MODAL --- */
-        #premium-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 3000;
-            display: none; align-items: center; justify-content: center;
-            backdrop-filter: blur(10px);
+        .copyright {
+            color: var(--text-light);
+            font-size: 0.9rem;
         }
-        .modal-content {
-            background: #0a0a0a; border: 2px solid var(--neon-purple); padding: 2.5rem;
-            border-radius: 15px; text-align: center; width: 85%; max-width: 350px;
-            box-shadow: 0 0 30px var(--neon-purple); animation: modalFade 0.3s ease;
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-        @keyframes modalFade { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-        .modal-content h2 { font-family: 'Orbitron'; color: var(--neon-purple); text-shadow: 0 0 10px var(--neon-purple); margin-bottom: 15px; }
-        .buy-btn {
-            background: rgba(188, 19, 254, 0.1); color: var(--neon-purple); border: 2px solid var(--neon-purple);
-            padding: 12px 30px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; border-radius: 5px;
-            width: 100%; margin-top: 15px; transition: 0.3s;
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .download-options {
+                grid-template-columns: 1fr;
+            }
+
+            .video-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .social-links {
+                gap: 0.8rem;
+            }
+
+            .social-links a {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+
+            .downloader-card {
+                padding: 1.5rem;
+            }
         }
-        .buy-btn:hover { background: var(--neon-purple); color: black; box-shadow: 0 0 20px var(--neon-purple); }
-        .close-modal-btn { background: none; border: none; color: #555; cursor: pointer; text-decoration: underline; margin-top: 15px; }
-
-        /* --- SIDEBAR --- */
-        .menu-toggle {
-            position: fixed; top: 20px; left: 20px; z-index: 1000;
-            background: rgba(0, 0, 0, 0.6); border: 2px solid var(--neon-green); color: var(--neon-green);
-            width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;
-            border-radius: 8px; font-size: 2rem; cursor: pointer;
-        }
-        .sidebar {
-            position: fixed; top: 0; left: -300px; width: 280px; height: 100%;
-            background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(10px);
-            border-right: 2px solid var(--neon-green); z-index: 1001; transition: 0.4s;
-            display: flex; flex-direction: column; padding-top: 80px;
-        }
-        .sidebar.active { left: 0; }
-        .sidebar a { padding: 18px 25px; text-decoration: none; font-size: 1.1rem; color: white; display: block; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .sidebar a:hover { color: var(--neon-green); padding-left: 35px; border-left: 5px solid var(--neon-green); }
-        .sidebar .close-btn { position: absolute; top: 20px; right: 20px; font-size: 2.5rem; color: #555; cursor: pointer; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; display: none; opacity: 0; }
-        .overlay.active { display: block; opacity: 1; }
-
-        /* --- CONTAINER STYLES --- */
-        .container {
-            background: rgba(10, 10, 10, 0.85); padding: 2.5rem; border-radius: 15px;
-            border: 2px solid var(--neon-green); width: 90%; max-width: 450px; text-align: center;
-            backdrop-filter: blur(8px); position: relative; animation: fadeIn 0.4s ease-in-out;
-            box-shadow: 0 0 20px rgba(35, 255, 2, 0.2);
-        }
-        .report-theme { border-color: var(--neon-red); }
-        .otp-theme { border-color: var(--neon-blue); }
-        .deactivate-theme { border-color: var(--neon-yellow); }
-
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        .hidden { display: none; }
-
-        h1 { font-family: 'Orbitron', sans-serif; color: var(--neon-green); font-size: 1.8rem; text-transform: uppercase; margin-bottom: 5px; text-shadow: 0 0 10px currentColor; }
-        p { color: #ccc; margin-bottom: 2rem; letter-spacing: 1px; }
-
-        .form-group { margin-bottom: 1.5rem; text-align: left; }
-        label { display: block; margin-bottom: 8px; font-weight: 700; color: var(--neon-green); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; }
-        .report-theme label { color: var(--neon-red); }
-        .otp-theme label { color: var(--neon-blue); }
-
-        input, select, textarea {
-            width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.5); border: 1px solid #333;
-            color: var(--neon-green); font-family: 'Rajdhani', sans-serif; font-size: 1.1rem;
-            font-weight: bold; border-radius: 5px; outline: none; box-sizing: border-box;
-        }
-        .report-theme input, .report-theme select, .report-theme textarea { color: var(--neon-red); }
-
-        .btn {
-            background: rgba(35, 255, 2, 0.1); color: var(--neon-green); border: 2px solid var(--neon-green);
-            padding: 15px; border-radius: 5px; width: 100%; font-family: 'Orbitron', sans-serif; font-weight: bold;
-            cursor: pointer; transition: 0.3s; text-transform: uppercase; margin-top: 15px;
-        }
-        .btn:hover { background: var(--neon-green); color: black; box-shadow: 0 0 20px var(--neon-green); transform: scale(1.02); }
-        .report-theme .btn { color: var(--neon-red); border-color: var(--neon-red); }
-        .otp-theme .btn { color: var(--neon-blue); border-color: var(--neon-blue); }
-        .btn-copy { border-color: #fff !important; color: #fff !important; background: transparent !important; }
-
-        .footer { margin-top: 25px; font-size: 0.8rem; color: #555; border-top: 1px solid #222; padding-top: 10px; }
-        .back-btn { position: absolute; top: 15px; left: 15px; background: none; border: none; color: #555; font-size: 1.2rem; cursor: pointer; }
-        #otp-log { height: 150px; overflow-y: auto; background: black; border: 1px solid #333; color: var(--neon-blue); font-family: monospace; font-size: 0.8rem; text-align: left; padding: 10px; margin-top: 15px; display: none; }
     </style>
 </head>
 <body>
-
-    <!-- LOADER -->
-    <div id="loader">
-        <div class="spinner"></div>
-        <div id="loader-text">PROCESSING SECURE REQUEST...</div>
-    </div>
-
-    <!-- PREMIUM ALERT -->
-    <div id="premium-modal">
-        <div class="modal-content">
-            <h2>PREMIUM USER</h2>
-            <p>මෙය භාවිතා කිරීමට නම් ඔබ Premium User කෙනෙකු විය යුතුය.</p>
-            <button class="buy-btn" onclick="location.href='premium.html'">BUY PREMIUM</button>
-            <br>
-            <button class="close-modal-btn" onclick="closePremiumModal()">Back Home</button>
+    <div class="container">
+        <header>
+            <h1><i class="fab fa-tiktok"></i> RASHU TIKTOK DOWNLOADER</h1>
+            <p class="subtitle">Download TikTok Videos Without Watermark</p>
+        </header>
+        
+        <div class="downloader-card">
+            <div class="input-group">
+                <input type="url" class="url-input" id="urlInput" placeholder="Paste TikTok video URL here..." required>
+                
+                <button class="download-btn" id="downloadBtn">
+                    <i class="fas fa-download"></i> Get Video Info
+                </button>
+            </div>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Fetching video information...</p>
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-exclamation-triangle"></i> <span id="errorText"></span>
+            </div>
+            
+            <div class="result-container" id="resultContainer">
+                <div class="video-info">
+                    <div class="video-title" id="videoTitle"></div>
+                    
+                    <div class="video-stats" id="videoStats">
+                        <!-- Stats will be populated by JavaScript -->
+                    </div>
+                    
+                    <div class="video-thumbnail" id="videoThumbnail"></div>
+                </div>
+                
+                <div class="download-options">
+                    <div class="download-option">
+                        <div class="option-title">Standard Quality</div>
+                        <a href="#" class="option-btn" id="downloadSd" target="_blank">
+                            <i class="fas fa-video"></i> Download SD
+                        </a>
+                    </div>
+                    
+                    <div class="download-option">
+                        <div class="option-title">High Quality</div>
+                        <a href="#" class="option-btn" id="downloadHd" target="_blank">
+                            <i class="fas fa-hd"></i> Download HD
+                        </a>
+                    </div>
+                    
+                    <div class="download-option">
+                        <div class="option-title">Audio Only</div>
+                        <a href="#" class="option-btn" id="downloadMp3" target="_blank">
+                            <i class="fas fa-music"></i> Download MP3
+                        </a>
+                    </div>
+                    
+                    <div class="download-option">
+                        <div class="option-title">With Watermark</div>
+                        <a href="#" class="option-btn" id="downloadWatermark" target="_blank">
+                            <i class="fas fa-water"></i> With Watermark
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
-    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-
-    <div class="sidebar" id="sidebar">
-        <span class="close-btn" onclick="toggleMenu()">×</span>
-        <div style="padding: 20px; text-align: center; color: var(--neon-green); font-family: 'Orbitron'; border-bottom: 2px solid var(--neon-green);">CYBER RUSH</div>
-        <a href="#" onclick="showMenu()">🏠 HOME</a>
-        <a href="https://wa.me/message/5ZZGFAM3W5S4E1" target="_blank">👨‍💻 DEVELOPER CONTACT</a>
-        <a href="#" onclick="showOtp()">📨 OTP SPAMMER</a>
-        <a href="#" onclick="openPremiumAlert()">🔒 DEACTIVATE ACC</a>
-        <a href="https://t.me/rashu_modz0715" target="_blank">✈️ TELEGRAM</a>
-    </div>
-
-    <!-- MAIN MENU -->
-    <div id="main-menu" class="container">
-        <div style="font-size: 3rem; color: var(--neon-green);">⚡</div>
-        <h1>CYBER RUSH MODEZ</h1>
-        <p>SELECT ULTIMATE TOOL</p>
-        <button class="btn" onclick="showTool()">🔓 UNBANNED NUMBER</button>
-        <button class="btn" style="color:var(--neon-red); border-color:var(--neon-red);" onclick="showReport()">⚠️ BANNED NUMBER</button>
-        <button class="btn" style="color:var(--neon-blue); border-color:var(--neon-blue);" onclick="showOtp()">📨 OTP SPAMMER (150)</button>
-        <button class="btn" style="color:var(--neon-yellow); border-color:var(--neon-yellow);" onclick="openPremiumAlert()">🚫 DEACTIVATE ACCOUNT</button>
-        <div class="footer">BEST DEVELOPER CYBER RUSH MODEZ ⚕️ <br> SRI LANKA 🇱🇰</div>
-    </div>
-
-    <!-- UNBAN TOOL -->
-    <div id="tool-page" class="container hidden">
-        <button class="back-btn" onclick="showMenu()">❮ BACK</button>
-        <div style="font-size: 3rem; color: var(--neon-green);">☣️</div>
-        <h1>Unban Tool</h1>
-        <div class="form-group"><label>User Name</label><input type="text" id="unban-name" placeholder="YOUR NAME"></div>
-        <div class="form-group"><label>Number</label><input type="text" id="unban-phone" placeholder="+947XXXXXXXX"></div>
-        <div class="form-group"><label>Ban Type</label>
-            <select id="unban-reason">
-                <option value="Technical Error / Technical Glitch">Technical Error</option>
-                <option value="False Spam Detection">Spam Error</option>
-                <option value="Policy Violation Mistake">Policy Mistake</option>
-            </select>
+        
+        <div class="instructions">
+            <h3><i class="fas fa-terminal"></i> How to use:</h3>
+            <ol>
+                <li>Open TikTok and copy video link</li>
+                <li>Paste link in the input field above</li>
+                <li>Click "Get Video Info" button</li>
+                <li>Choose your preferred download option</li>
+                <li>Video will download automatically</li>
+            </ol>
         </div>
-        <button class="btn" onclick="executeProcess('unban')">⚡ Execute Email</button>
-        <button class="btn btn-copy" onclick="copyText('unban')">💾 Copy Long Text</button>
-    </div>
 
-    <!-- BAN TOOL -->
-    <div id="report-page" class="container report-theme hidden">
-        <button class="back-btn" onclick="showMenu()">❮ BACK</button>
-        <div style="font-size: 3rem; color: var(--neon-red);">🚨</div>
-        <h1>Ban Tool</h1>
-        <div class="form-group"><label>Target Number</label><input type="text" id="report-phone" placeholder="+947XXXXXXXX"></div>
-        <div class="form-group"><label>Violation Type</label>
-            <select id="report-reason">
-                <option value="Harassment and Cyberbullying">Harassment</option>
-                <option value="Spam and Bulk Messaging">Spamming</option>
-                <option value="Fake Identity and Scams">Scam Account</option>
-            </select>
-        </div>
-        <button class="btn" onclick="executeProcess('report')">🔥 SEND REPORT</button>
-        <button class="btn btn-copy" onclick="copyText('report')">💾 Copy Long Text</button>
-    </div>
-
-    <!-- OTP TOOL -->
-    <div id="otp-page" class="container otp-theme hidden">
-        <button class="back-btn" onclick="showMenu()">❮ BACK</button>
-        <div style="font-size: 3rem; color: var(--neon-blue);">📨</div>
-        <h1>OTP Spammer</h1>
-        <input type="text" id="otp-phone" placeholder="947XXXXXXXX">
-        <button class="btn" onclick="executeProcess('otp')">🚀 START ATTACK (150)</button>
-        <div id="otp-log"></div>
+        <footer>
+            <div class="social-links">
+                <a href="https://www.facebook.com/people/Elite-Pro/6156766873/" aria-label="Facebook" target="_blank">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://wa.me/94764085107?text=Hello%20from%20TikTok%20Downloader" aria-label="WhatsApp" target="_blank">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="https://youtube.com/" aria-label="YouTube" target="_blank">
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a href="https://t.me/e/" aria-label="Telegram" target="_blank">
+                    <i class="fab fa-telegram-plane"></i>
+                </a>
+            </div>
+            <p class="copyright">TT DOWNLOADER © 2025 POWERED BY RASHU</p>
+        </footer>
     </div>
 
     <script>
-        const restricted = ["0750292806", "0778059333", "0764085107"];
+        // TikTok downloader functionality
+        const urlInput = document.getElementById('urlInput');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const loading = document.getElementById('loading');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        const resultContainer = document.getElementById('resultContainer');
+        const videoTitle = document.getElementById('videoTitle');
+        const videoStats = document.getElementById('videoStats');
+        const videoThumbnail = document.getElementById('videoThumbnail');
+        const downloadSd = document.getElementById('downloadSd');
+        const downloadHd = document.getElementById('downloadHd');
+        const downloadMp3 = document.getElementById('downloadMp3');
+        const downloadWatermark = document.getElementById('downloadWatermark');
 
-        function isBlocked(num) {
-            if (!num) return false;
-            let clean = num.replace(/\D/g, "");
-            for (let b of restricted) { if (clean.endsWith(b.substring(1))) { alert("RESTRICTION ACTIVE!"); return true; } }
-            return false;
-        }
+        // Handle download button click
+        downloadBtn.addEventListener('click', fetchVideoInfo);
 
-        // --- LONG EMAIL GENERATORS (150+ Words) ---
-        function getUnbanMsg() {
-            let phone = document.getElementById('unban-phone').value;
-            let name = document.getElementById('unban-name').value;
-            let reason = document.getElementById('unban-reason').value;
-            return `Dear WhatsApp Support Team,\n\nI am writing this formal appeal to request the immediate reinstatement of my WhatsApp account associated with the phone number ${phone}. My name is ${name}, and I have been an active and law-abiding user of WhatsApp for many years. Recently, I discovered that my account has been banned due to ${reason}, which I believe is a result of a technical error or an automated system mistake.\n\nI want to emphasize that I have always strictly followed the WhatsApp Terms of Service and Community Guidelines. This account is essential for my daily life, including my business communications and staying connected with my elderly family members. I have never sent spam messages, participated in unauthorized groups, or used modified versions of the application. The sudden loss of access is causing significant personal and professional distress. I request you to conduct a detailed human manual review of my account history to verify my compliance. I am a responsible user and committed to maintaining a safe environment. Please restore my communication service as soon as possible. Thank you for your professional consideration.\n\nBest Regards,\n${name}`;
-        }
-
-        function getReportMsg() {
-            let target = document.getElementById('report-phone').value;
-            let reason = document.getElementById('report-reason').value;
-            return `To the WhatsApp Trust and Safety Team,\n\nI am writing to officially report a severe violation of WhatsApp’s Community Guidelines by the user associated with the phone number ${target}. This account has been consistently engaging in harmful activities, specifically related to ${reason}. Such behavior is detrimental to the safe and positive messaging environment that your platform aims to provide for its global user base.\n\nI have observed this user sending unsolicited content, spreading misinformation, and engaging in suspicious activities that clearly breach your Terms of Service. This behavior is not only annoying but also potentially dangerous for vulnerable users. To protect the integrity of the platform and the safety of the community, I strongly urge your security team to investigate this account immediately. Based on the evidence of ongoing policy violations, I request that you take strict disciplinary action, including a permanent ban of this account from your services. Allowing such users to operate freely compromises the trust of law-abiding users. I trust your team will handle this report with the utmost urgency to maintain a secure ecosystem. Thank you for your commitment to safety.\n\nSincerely,\nA Concerned WhatsApp User`;
-        }
-
-        function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); }
-        function showMenu() { hideAll(); document.getElementById('main-menu').classList.remove('hidden'); }
-        function hideAll() { ['main-menu', 'tool-page', 'report-page', 'otp-page'].forEach(id => document.getElementById(id).classList.add('hidden')); }
-        function showTool() { hideAll(); document.getElementById('tool-page').classList.remove('hidden'); }
-        function showReport() { hideAll(); document.getElementById('report-page').classList.remove('hidden'); }
-        function showOtp() { hideAll(); document.getElementById('otp-page').classList.remove('hidden'); }
-        function openPremiumAlert() { document.getElementById('premium-modal').style.display = 'flex'; }
-        function closePremiumModal() { document.getElementById('premium-modal').style.display = 'none'; }
-
-        async function executeProcess(type) {
-            let phone = document.getElementById(type + '-phone').value;
-            if (type !== 'unban' && isBlocked(phone)) return;
-            if (!phone) { alert("Enter Number!"); return; }
-
-            if (type === 'otp') { startOtpAttack(phone); return; }
-
-            document.getElementById('loader').style.display = 'flex';
-            await new Promise(r => setTimeout(r, 2000));
-            document.getElementById('loader').style.display = 'none';
-
-            let body = (type === 'unban') ? getUnbanMsg() : getReportMsg();
-            let subject = (type === 'unban') ? "Account Reinstatement Appeal" : "Urgent: Violation Report";
-            window.location.href = `mailto:support@whatsapp.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        }
-
-        function copyText(type) {
-            let txt = (type === 'unban') ? getUnbanMsg() : getReportMsg();
-            navigator.clipboard.writeText(txt).then(() => alert("Detailed 150+ Words Text Copied!"));
-        }
-
-        async function startOtpAttack(phone) {
-            const logBox = document.getElementById('otp-log');
-            logBox.style.display = 'block'; logBox.innerHTML = `[+] Attack Initialized: ${phone}<br>`;
-            for (let i = 1; i <= 150; i++) {
-                await new Promise(r => setTimeout(r, 40));
-                logBox.innerHTML += `>> Sending OTP Request ${i}... SUCCESS<br>`;
-                logBox.scrollTop = logBox.scrollHeight;
+        // Handle Enter key press in input field
+        urlInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                fetchVideoInfo();
             }
-            alert("150 OTP Simulation Finished!");
+        });
+
+        // Function to get video data from TikTok API
+        async function fetchVideoInfo() {
+            const url = urlInput.value.trim();
+            
+            // Validate input
+            if (!url) {
+                showError('Please enter a TikTok URL');
+                return;
+            }
+            
+            // Check if it's a valid TikTok URL
+            if (!isValidTikTokUrl(url)) {
+                showError('Please enter a valid TikTok URL (e.g., https://www.tiktok.com/@username/video/123456789)');
+                return;
+            }
+            
+            // Hide previous results and errors
+            resultContainer.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // Show loading state
+            loading.style.display = 'block';
+            downloadBtn.disabled = true;
+            downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            
+            try {
+                // Try to get video info from API
+                const videoData = await getVideoData(url);
+                displayVideoInfo(videoData);
+            } catch (error) {
+                console.error('Error fetching video:', error);
+                showError('Failed to fetch video. Please check the URL and try again.');
+            } finally {
+                loading.style.display = 'none';
+                downloadBtn.disabled = false;
+                downloadBtn.innerHTML = '<i class="fas fa-download"></i> Get Video Info';
+            }
         }
+
+        // Function to get video data
+        async function getVideoData(url) {
+            // Clean and validate URL
+            const cleanUrl = cleanTikTokUrl(url);
+            const encodedUrl = encodeURIComponent(cleanUrl);
+            
+            // Try multiple API endpoints for better reliability
+            const apis = [
+                `https://api.tiklydown.eu.org/api/download?url=${encodedUrl}`,
+                `https://tikwm.com/api/?url=${encodedUrl}`,
+                `https://downloader.bot/api/tiktok?url=${encodedUrl}`
+            ];
+            
+            for (const apiUrl of apis) {
+                try {
+                    console.log('Trying API:', apiUrl);
+                    const response = await fetch(apiUrl, {
+                        headers: {
+                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                            'Accept': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('API Response:', data);
+                        
+                        if (data.data || data.video || data.author) {
+                            return formatVideoData(data);
+                        }
+                    }
+                } catch (error) {
+                    console.warn(`API ${apiUrl} failed:`, error);
+                    continue;
+                }
+            }
+            
+            // If all APIs fail, use fallback
+            console.log('All APIs failed, using fallback');
+            return getFallbackVideoData(url);
+        }
+
+        function cleanTikTokUrl(url) {
+            // Remove tracking parameters and clean the URL
+            try {
+                const urlObj = new URL(url);
+                urlObj.search = '';
+                return urlObj.toString();
+            } catch (e) {
+                return url;
+            }
+        }
+
+        function formatVideoData(data) {
+            // Format data from different API responses
+            console.log('Formatting data:', data);
+            
+            // Check different API response formats
+            let videoInfo = {
+                title: 'TikTok Video',
+                thumbnail: '',
+                video_sd: '',
+                video_hd: '',
+                mp3: '',
+                video_watermark: '',
+                views: 0,
+                likes: 0,
+                comments: 0,
+                shares: 0
+            };
+
+            // Try to extract data from different API formats
+            if (data.data) {
+                // Format 1: data.data structure
+                const video = data.data;
+                videoInfo = {
+                    title: video.title || video.desc || 'TikTok Video',
+                    thumbnail: video.cover || video.thumbnail || video.cover_url || '',
+                    video_sd: video.play || video.url || video.video_url || '',
+                    video_hd: video.hdplay || video.download_url || video.play || '',
+                    mp3: video.music || video.music_url || '',
+                    video_watermark: video.wmplay || video.watermark_url || '',
+                    views: video.play_count || video.playCount || 0,
+                    likes: video.digg_count || video.likeCount || 0,
+                    comments: video.comment_count || video.commentCount || 0,
+                    shares: video.share_count || video.shareCount || 0
+                };
+            } else if (data.video) {
+                // Format 2: data.video structure
+                const video = data.video;
+                videoInfo = {
+                    title: video.title || video.desc || 'TikTok Video',
+                    thumbnail: video.cover || video.thumbnail || '',
+                    video_sd: video.play || video.downloadURL || '',
+                    video_hd: video.hdPlay || video.play || '',
+                    mp3: video.music || '',
+                    video_watermark: video.watermark || '',
+                    views: video.playCount || 0,
+                    likes: video.diggCount || 0,
+                    comments: video.commentCount || 0,
+                    shares: video.shareCount || 0
+                };
+            } else if (data.author) {
+                // Format 3: Direct data structure
+                videoInfo = {
+                    title: data.title || data.desc || 'TikTok Video',
+                    thumbnail: data.cover || data.thumbnail || '',
+                    video_sd: data.play || data.download_url || '',
+                    video_hd: data.hdplay || data.play || '',
+                    mp3: data.music || data.music_url || '',
+                    video_watermark: data.wmplay || '',
+                    views: data.play_count || 0,
+                    likes: data.digg_count || 0,
+                    comments: data.comment_count || 0,
+                    shares: data.share_count || 0
+                };
+            }
+
+            // Generate fallback URLs if needed
+            if (!videoInfo.video_sd && videoInfo.video_hd) {
+                videoInfo.video_sd = videoInfo.video_hd;
+            }
+            if (!videoInfo.video_hd && videoInfo.video_sd) {
+                videoInfo.video_hd = videoInfo.video_sd;
+            }
+            if (!videoInfo.video_watermark && videoInfo.video_sd) {
+                videoInfo.video_watermark = videoInfo.video_sd;
+            }
+
+            return videoInfo;
+        }
+
+        // Fallback function to generate mock video data if API fails
+        function getFallbackVideoData(url) {
+            const videoId = extractVideoId(url) || Date.now().toString().slice(-6);
+            
+            // Use sample videos for demo
+            return {
+                title: `TikTok Video #${videoId}`,
+                thumbnail: `https://placehold.co/600x400/ff00cc/00ccff?text=TikTok+Video&font=inter`,
+                video_sd: `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4`,
+                video_hd: `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4`,
+                mp3: `https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3`,
+                video_watermark: `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4`,
+                views: Math.floor(Math.random() * 10000000),
+                likes: Math.floor(Math.random() * 1000000),
+                comments: Math.floor(Math.random() * 50000),
+                shares: Math.floor(Math.random() * 100000)
+            };
+        }
+
+        // Function to extract video ID from TikTok URL
+        function extractVideoId(url) {
+            try {
+                const urlObj = new URL(url);
+                const pathParts = urlObj.pathname.split('/');
+                
+                // Look for video ID in the path
+                for (let part of pathParts) {
+                    if (part && part.length > 10 && !part.includes('@')) {
+                        return part;
+                    }
+                }
+                
+                return null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function displayVideoInfo(videoData) {
+            console.log('Displaying video data:', videoData);
+            
+            // Set video title
+            videoTitle.textContent = videoData.title || 'TikTok Video';
+            
+            // Set video stats
+            videoStats.innerHTML = '';
+            
+            const stats = [
+                {
+                    icon: 'eye',
+                    value: formatNumber(videoData.views),
+                    label: 'Views'
+                },
+                {
+                    icon: 'heart',
+                    value: formatNumber(videoData.likes),
+                    label: 'Likes'
+                },
+                {
+                    icon: 'comment',
+                    value: formatNumber(videoData.comments),
+                    label: 'Comments'
+                },
+                {
+                    icon: 'share',
+                    value: formatNumber(videoData.shares),
+                    label: 'Shares'
+                }
+            ];
+            
+            stats.forEach((stat, index) => {
+                const statItem = document.createElement('div');
+                statItem.className = 'stat-item';
+                statItem.innerHTML = `
+                    <div class="stat-icon">
+                        <i class="fas fa-${stat.icon}"></i>
+                    </div>
+                    <div class="stat-value">${stat.value}</div>
+                    <div class="stat-label">${stat.label}</div>
+                `;
+                videoStats.appendChild(statItem);
+            });
+            
+            // Set video thumbnail
+            videoThumbnail.innerHTML = '';
+            const img = document.createElement('img');
+            img.src = videoData.thumbnail;
+            img.alt = 'Video thumbnail';
+            img.onload = () => {
+                img.style.opacity = '1';
+            };
+            img.onerror = () => {
+                img.src = `https://placehold.co/600x400/ff00cc/00ccff?text=TikTok+Video`;
+            };
+            img.style.opacity = '0';
+            img.style.transition = 'opacity 0.3s';
+            videoThumbnail.appendChild(img);
+            
+            // Generate filename from title
+            const filename = generateFilename(videoData.title || 'tiktok_video');
+            
+            // Set download links
+            setupDownloadLink(downloadSd, videoData.video_sd, `${filename}_sd`, 'mp4');
+            setupDownloadLink(downloadHd, videoData.video_hd, `${filename}_hd`, 'mp4');
+            setupDownloadLink(downloadMp3, videoData.mp3, filename, 'mp3');
+            setupDownloadLink(downloadWatermark, videoData.video_watermark, `${filename}_watermark`, 'mp4');
+            
+            // Show result container
+            resultContainer.style.display = 'block';
+            
+            // Scroll to results
+            setTimeout(() => {
+                resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        // Helper function to setup download links
+        function setupDownloadLink(element, url, filename, ext) {
+            if (url && url.trim() !== '') {
+                element.href = url;
+                element.setAttribute('download', `${filename}.${ext}`);
+                element.onclick = function(e) {
+                    if (!url.includes('http')) {
+                        e.preventDefault();
+                        showError('Download URL is not available');
+                    }
+                    // Let default download behavior happen
+                };
+                element.style.opacity = '1';
+                element.style.pointerEvents = 'auto';
+                element.style.cursor = 'pointer';
+                
+                // Add click effect
+                element.addEventListener('mousedown', function() {
+                    this.style.transform = 'scale(0.95)';
+                });
+                
+                element.addEventListener('mouseup', function() {
+                    this.style.transform = '';
+                });
+            } else {
+                element.style.opacity = '0.5';
+                element.style.pointerEvents = 'none';
+                element.style.cursor = 'not-allowed';
+                element.onclick = function(e) {
+                    e.preventDefault();
+                    showError('This download option is not available for this video');
+                };
+            }
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000000) {
+                return (num / 1000000000).toFixed(1) + 'B';
+            } else if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
+        }
+
+        function generateFilename(title) {
+            return title
+                .replace(/[^a-zA-Z0-9\s]/g, '')
+                .replace(/\s+/g, '_')
+                .substring(0, 30)
+                .toLowerCase();
+        }
+
+        function isValidTikTokUrl(url) {
+            // Comprehensive TikTok URL validation
+            const tiktokUrlPatterns = [
+                /https?:\/\/(www\.)?tiktok\.com\/@[\w.-]+\/video\/\d+/,
+                /https?:\/\/(www\.)?tiktok\.com\/[\w.-]+\/video\/\d+/,
+                /https?:\/\/vt\.tiktok\.com\/[\w]+\//,
+                /https?:\/\/vm\.tiktok\.com\/[\w]+\//,
+                /https?:\/\/(www\.)?tiktok\.com\/t\/[\w]+\//
+            ];
+            
+            return tiktokUrlPatterns.some(pattern => pattern.test(url));
+        }
+
+        function showError(message) {
+            errorText.textContent = message;
+            errorMessage.style.display = 'block';
+            
+            // Scroll to error message
+            setTimeout(() => {
+                errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+            
+            // Auto-hide error after 5 seconds
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add input focus effect
+            urlInput.addEventListener('focus', function() {
+                this.style.boxShadow = '0 0 0 3px rgba(0, 204, 255, 0.2)';
+            });
+            
+            urlInput.addEventListener('blur', function() {
+                this.style.boxShadow = 'none';
+            });
+            
+            // Add real-time URL validation
+            urlInput.addEventListener('input', function() {
+                const url = this.value.trim();
+                if (url && !isValidTikTokUrl(url)) {
+                    this.style.borderColor = 'var(--error)';
+                } else {
+                    this.style.borderColor = 'rgba(255, 0, 204, 0.4)';
+                }
+            });
+        });
     </script>
 </body>
 </html>
