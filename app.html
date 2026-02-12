@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QUEEN RASHU App</title>
+    <title>Dtz Bot Store App</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Noto+Sans+Sinhala:wght@400;700&display=swap');
 
@@ -97,27 +97,38 @@
 
         /* --- MAIN CONTENT AREA --- */
         .content-area {
-            margin-top: 130px; /* Adjusted for double buttons */
+            margin-top: 130px; 
             padding-bottom: 120px; 
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
             overflow-y: auto;
+            flex: 1;
+        }
+
+        /* Sections (Home, Settings, About) */
+        .page-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        #settings-section, #about-section {
+            display: none; /* Hidden by default */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .app-container {
             width: 90%;
             max-width: 450px;
             text-align: center;
-            opacity: 0;
-            transform: scale(0.9);
-            animation: showContent 0.5s ease-out forwards;
-            animation-delay: 3.2s;
-        }
-
-        @keyframes showContent {
-            100% { opacity: 1; transform: scale(1); }
         }
 
         .logo-main {
@@ -132,6 +143,7 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+            width: 100%;
         }
 
         .play-store-btn {
@@ -192,6 +204,9 @@
             justify-content: center;
             width: 60px;
             transition: 0.3s;
+            cursor: pointer;
+            background: none;
+            border: none;
         }
 
         .nav-item i { font-size: 24px; }
@@ -209,6 +224,7 @@
             border-radius: 50%;
             border: 2px solid var(--neon-color);
             box-shadow: var(--shadow-glow);
+            cursor: pointer;
         }
 
         .center-img {
@@ -274,6 +290,7 @@
             padding: 10px; border: 1px solid var(--neon-color);
             border-radius: 8px; margin-bottom: 8px; display: block;
             text-align: center; font-size: 14px;
+            cursor: pointer;
         }
 
         /* --- NEON MODAL ALERT --- */
@@ -344,6 +361,21 @@
             transition: 0.3s;
         }
 
+        /* --- SETTINGS & ABOUT STYLES --- */
+        .info-card {
+            background: var(--card-bg);
+            border: 1px solid var(--neon-color);
+            border-radius: 15px;
+            padding: 20px;
+            width: 90%;
+            max-width: 450px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-glow);
+            text-align: center;
+        }
+        .info-card h3 { margin-bottom: 10px; font-size: 18px; }
+        .info-card p { font-size: 13px; color: #ccc; margin-bottom: 15px; }
+
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -351,7 +383,7 @@
 
     <!-- Splash Screen -->
     <div class="splash-screen" id="splash">
-        <div class="splash-text">QUEEN RASHU</div>
+        <div class="splash-text">𝐃𝐓𝐙 𝐁𝐎𝐓 𝐒𝐓𝐎𝐑𝐄</div>
         <div style="color: #23FF02; margin-top: 15px;"><i class="fas fa-circle-notch fa-spin fa-2x"></i></div>
     </div>
 
@@ -380,100 +412,164 @@
             <button class="icon-btn" onclick="toggleMenu()">
                 <i class="fas fa-bars"></i>
             </button>
-            <!-- New Color Change Button -->
             <button class="icon-btn" id="rainbowBtn" onclick="toggleRainbow()" title="Change Color">
                 <i class="fas fa-palette"></i>
             </button>
         </div>
     </div>
 
-    <!-- Popup Menu -->
+    <!-- Popup Menu (Updated logic) -->
     <div class="popup-menu" id="popupMenu">
-        <a href="#" class="menu-link">Owner</a>
-        <a href="#" class="menu-link">WhatsApp Group</a>
-        <a href="#" class="menu-link">YouTube Channel</a>
+        <div class="menu-link" onclick="handleMenuRedirect()">Owner</div>
+        <div class="menu-link" onclick="handleMenuRedirect()">WhatsApp Group</div>
+        <div class="menu-link" onclick="handleMenuRedirect()">YouTube Channel</div>
     </div>
 
     <!-- Main Content -->
     <div class="content-area">
-        <div class="app-container">
-            <div class="logo-main">QUEEN RASHU MENU</div>
+        
+        <!-- HOME SECTION -->
+        <div id="home-section" class="page-section">
+            <div class="app-container">
+                <div class="logo-main">DTZ STORE ALL BOT</div>
+                <div class="btn-list" id="buttonList">
+                    
+                    <!-- Buttons -->
+                    <a href="https://new-updatev3-a730f28f417e.herokuapp.com/" class="play-store-btn">
+                        <img src="https://files.catbox.moe/q7a9q9.jpeg" class="btn-img">
+                        <div class="btn-info">
+                            <span class="title">QUEEN RASHU MINI BOT</span>
+                            <span class="subtitle">𝐎ᴡɴᴇʀ 𝐀ɴᴅ 𝐂ʀᴇᴀᴛᴏʀ : ᴅᴛᴢ ᴛᴍ</span>
+                        </div>
+                    </a>
 
-            <div class="btn-list" id="buttonList">
-                <a href="#" class="play-store-btn" data-name="Rashu Bot">
-                    <img src="https://files.catbox.moe/q7a9q9.jpeg" class="btn-img">
-                    <div class="btn-info">
-                        <span class="title">RASHU BOT</span>
-                        <span class="subtitle">බොට් පද්ධතිය ක්‍රියාත්මක කරන්න</span>
-                    </div>
-                </a>
+                    <a href="https://darktechzone.site/pair-web" class="play-store-btn">
+                        <img src="https://i.ibb.co/HL9CMt2C/IMG-20260212-WA0123.jpg" class="btn-img">
+                        <div class="btn-info">
+                            <span class="title">DTZ MINI BOT</span>
+                            <span class="subtitle">𝐎ᴡɴᴇʀ 𝐀ꜱʜᴜ & 𝐃ɪɴᴀ : ᴅᴛᴢ ᴛᴍ</span>
+                        </div>
+                    </a>
+                    
+                    <a href="https://darktechzone.site/dtzcrasher" class="play-store-btn">
+                        <img src="https://i.ibb.co/LhzJYkYD/IMG-20260212-WA0121.jpg" class="btn-img">
+                        <div class="btn-info">
+                            <span class="title">DTZ CRASHER MINI BOT</span>
+                            <span class="subtitle">𝐎ᴡɴᴇʀ 𝐀ꜱʜᴜ & 𝐃ɪɴᴀ : ᴅᴛᴢ ᴛᴍ</span>
+                        </div>
+                    </a>
+                    
+                    <a href="https://gotukola.site" class="play-store-btn">
+                        <img src="https://i.ibb.co/kg9tY1sd/IMG-20260212-WA0093.jpg" class="btn-img">
+                        <div class="btn-info">
+                            <span class="title">GOTU KOLAYA MINI BOT</span>
+                            <span class="subtitle">𝐎ᴡɴᴇʀ 𝐂ʜᴀᴍᴏᴅ : ᴅᴛᴢ ᴛᴍ</span>
+                        </div>
+                    </a>
+                    
+                    <a href="https://queen-ashi-main-site.netlify.app" class="play-store-btn">
+                        <img src="https://i.ibb.co/SwzsVBGC/IMG-20260212-WA0127.jpg" class="btn-img">
+                        <div class="btn-info">
+                            <span class="title">ASHI MD MINI BOT</span>
+                            <span class="subtitle">𝐎ᴡɴᴇʀ 𝐀ʙᴅᴜʟ 𝐊ᴀʟᴀᴍ : ᴅᴛᴢ ᴛᴍ</span>
+                        </div>
+                    </a>
+                    
+                    <a href="https://two-bot-mini-rashu-4613fb8a471b.herokuapp.com/" class="play-store-btn">
+                        <img src="https://i.ibb.co/1G8pS4Dn/IMG-20260212-WA0130.jpg" class="btn-img">
+                        <div class="btn-info">
+                            <span class="title">DTZ LITE PRO MINI BOT</span>
+                            <span class="subtitle">𝐎ᴡɴᴇʀ 𝐂ʏʙᴇʀ 𝐇ᴜɴᴛᴇʀ : ᴅᴛᴢ ᴛᴍ</span>
+                        </div>
+                    </a>
+                    
+                    <a href="https://two-bot-mini-rashu-4613fb8a471b.herokuapp.com/" class="play-store-btn">
+                        <img src="https://files.catbox.moe/q7a9q9.jpeg" class="btn-img">
+                        <div class="btn-info">
+                            <span class="title">RASHU BOT V2</span>
+                            <span class="subtitle">බොට් පද්ධතිය ක්‍රියාත්මක කරන්න</span>
+                        </div>
+                    </a>
 
-                <a href="#" class="play-store-btn" data-name="Gallery">
-                    <img src="https://i.ibb.co/bGq4Qzd/IMG-20251217-WA0001.jpg" class="btn-img">
-                    <div class="btn-info">
-                        <span class="title">Gallery</span>
-                        <span class="subtitle">පින්තූර එකතුව බලන්න</span>
-                    </div>
-                </a>
+                    <a href="https://two-bot-mini-rashu-4613fb8a471b.herokuapp.com/" class="play-store-btn">
+                        <img src="https://i.ibb.co/21KQvsvr/20260110-222028-2.jpg" class="btn-img">
+                        <div class="btn-info">
+                            <span class="title">New Updates</span>
+                            <span class="subtitle">අලුත්ම තොරතුරු</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
 
-                <a href="#" class="play-store-btn" data-name="Updates">
-                    <img src="https://i.ibb.co/21KQvsvr/20260110-222028-2.jpg" class="btn-img">
-                    <div class="btn-info">
-                        <span class="title">New Updates</span>
-                        <span class="subtitle">අලුත්ම තොරතුරු</span>
-                    </div>
+        <!-- SETTINGS SECTION -->
+        <div id="settings-section" class="page-section">
+            <div class="logo-main">DTZ STORE SETTING</div>
+            <div class="info-card">
+                <h3>App Settings</h3>
+                <p>Theme customization and notifications</p>
+                <div class="play-store-btn" onclick="toggleTheme()" style="justify-content: center; cursor: pointer;">
+                    Switch Theme Mode
+                </div>
+                <br>
+                <div class="play-store-btn" onclick="toggleRainbow()" style="justify-content: center; cursor: pointer;">
+                    Enable RGB Mode
+                </div>
+            </div>
+            <div class="info-card">
+                <h3>Version</h3>
+                <p>DTZ Store v2.5.0</p>
+            </div>
+        </div>
+
+        <!-- ABOUT SECTION -->
+        <div id="about-section" class="page-section">
+            <div class="logo-main">DTZ STORE ABOUT</div>
+            <div class="info-card">
+                <img src="https://i.ibb.co/FLrzgBfT/20260212-173935.png" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--neon-color); margin-bottom: 10px;">
+                <h3>Developed By DTZ TEAM</h3>
+                <p>We provide the best WhatsApp Bots and Tools for Sri Lankan users.</p>
+                <p>Contact us for more details.</p>
+                <a href="https://whatsapp.com/channel/0029VaicB1MISTkGyQ7Bqe23" class="play-store-btn" style="justify-content: center;">
+                    Contact Support
                 </a>
             </div>
         </div>
+
     </div>
 
-    <!-- Bottom Navigation Bar -->
+    <!-- Bottom Navigation Bar (Updated) -->
     <div class="bottom-nav">
-        <a href="setting.html" class="nav-item">
+        <button class="nav-item" onclick="showPage('settings')">
             <i class="fas fa-cog"></i>
             <span>Settings</span>
-        </a>
+        </button>
 
-        <div class="nav-center-wrapper">
+        <div class="nav-center-wrapper" onclick="showPage('home')">
             <div class="processing-ring"></div>
-            <img src="https://i.ibb.co/21KQvsvr/20260110-222028-2.jpg" alt="Center" class="center-img">
+            <img src="https://i.ibb.co/FLrzgBfT/20260212-173935.png" alt="Center" class="center-img">
         </div>
 
-        <a href="about.html" class="nav-item">
+        <button class="nav-item" onclick="showPage('about')">
             <i class="fas fa-user-shield"></i>
             <span>About</span>
-        </a>
+        </button>
     </div>
 
     <script>
         // --- Color Changing Logic ---
         let rainbowInterval = null;
         let colorIndex = 0;
-        const colors = [
-            "#23FF02", // Green (Default)
-            "#FF0000", // Red
-            "#00FFFF", // Cyan
-            "#FFFF00", // Yellow
-            "#FF00FF", // Magenta
-            "#FF8000", // Orange
-            "#0080FF", // Azure
-            "#FF007F", // Rose
-            "#8000FF", // Violet
-            "#FFFFFF"  // White
-        ];
+        const colors = ["#23FF02", "#FF0000", "#00FFFF", "#FFFF00", "#FF00FF", "#FF8000", "#0080FF", "#FF007F", "#8000FF", "#FFFFFF"];
 
         function toggleRainbow() {
             const btn = document.getElementById('rainbowBtn');
-            
             if (rainbowInterval) {
-                // Stop the interval
                 clearInterval(rainbowInterval);
                 rainbowInterval = null;
-                // Reset to default color
                 document.documentElement.style.setProperty('--neon-color', "#23FF02");
                 btn.style.boxShadow = "0 0 10px #23FF02";
             } else {
-                // Start cycling colors every 1.5 seconds (1500ms)
                 rainbowInterval = setInterval(() => {
                     document.documentElement.style.setProperty('--neon-color', colors[colorIndex]);
                     colorIndex = (colorIndex + 1) % colors.length;
@@ -508,14 +604,53 @@
             document.getElementById('popupMenu').classList.toggle('active');
         }
 
+        // --- NEW: Handle Popup Menu Redirects ---
+        function handleMenuRedirect() {
+            // Close menu
+            document.getElementById('popupMenu').classList.remove('active');
+            // Show Alert
+            alert("External Link වෙත Redirect වෙමින් පවතී...");
+            // Redirect
+            window.location.href = "https://two-bot-mini-rashu-4613fb8a471b.herokuapp.com/";
+        }
+
+        // --- NEW: Improved Search Function ---
         function filterButtons() {
+            // Switch to home if searching
+            showPage('home');
+            
             let input = document.getElementById('searchInput').value.toLowerCase();
             let buttons = document.getElementsByClassName('play-store-btn');
+            
             for (let i = 0; i < buttons.length; i++) {
-                let name = buttons[i].getAttribute('data-name').toLowerCase();
-                buttons[i].style.display = name.includes(input) ? "flex" : "none";
+                // Get all text inside the button (Title + Subtitle)
+                let textContent = buttons[i].innerText.toLowerCase();
+                
+                // Check if input exists in text
+                if (textContent.includes(input)) {
+                    buttons[i].style.display = "flex";
+                } else {
+                    buttons[i].style.display = "none";
+                }
             }
         }
+
+        // --- NEW: Page Navigation (Home, Settings, About) ---
+        function showPage(pageId) {
+            // Hide all sections
+            document.getElementById('home-section').style.display = 'none';
+            document.getElementById('settings-section').style.display = 'none';
+            document.getElementById('about-section').style.display = 'none';
+
+            // Show selected section
+            document.getElementById(pageId + '-section').style.display = 'flex';
+            
+            // Scroll to top
+            document.querySelector('.content-area').scrollTop = 0;
+        }
+
+        // Initialize Home
+        document.getElementById('home-section').style.display = 'flex';
 
         window.onclick = function(event) {
             if (!event.target.closest('.icon-btn') && !event.target.closest('.popup-menu')) {
