@@ -1,662 +1,97 @@
 <!DOCTYPE html>
-<html lang="si">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dtz Bot Store App</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Noto+Sans+Sinhala:wght@400;700&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voice Lesson Explainer 🎧</title>
 
-        :root {
-            --neon-color: #23FF02;
-            --bg-color: #000000;
-            --card-bg: rgba(20, 20, 20, 0.95);
-            --text-color: var(--neon-color);
-            --shadow-glow: 0 0 10px var(--neon-color), 0 0 20px rgba(35, 255, 2, 0.4);
-            --popup-bg: rgba(0, 0, 0, 0.95);
-        }
-
-        body.light-mode {
-            --bg-color: #f4f4f4;
-            --card-bg: #ffffff;
-            --text-color: #0a0a0a;
-            --shadow-glow: 0 0 10px rgba(0, 0, 0, 0.1);
-            --popup-bg: #ffffff;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', 'Noto Sans Sinhala', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--neon-color);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            transition: background-color 0.5s ease;
-            overflow-x: hidden;
-        }
-
-        /* --- TOP NAVIGATION --- */
-        .top-nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px 20px;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 3000;
-            background: var(--bg-color);
-        }
-
-        .nav-right-btns {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .icon-btn {
-            background: transparent;
-            border: 2px solid var(--neon-color);
-            color: var(--neon-color);
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            font-size: 18px;
-            flex-shrink: 0;
-            box-shadow: var(--shadow-glow);
-        }
-
-        .search-container {
-            flex-grow: 1;
-            margin: 0 15px;
-        }
-
-        #searchInput {
-            width: 100%;
-            padding: 10px 15px;
-            border-radius: 25px;
-            border: 2px solid var(--neon-color);
-            background: transparent;
-            color: var(--neon-color);
-            outline: none;
-            font-family: inherit;
-            box-shadow: var(--shadow-glow);
-        }
-
-        /* --- MAIN CONTENT AREA --- */
-        .content-area {
-            margin-top: 130px; 
-            padding-bottom: 120px; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        /* Sections (Home, Settings, About) */
-        .page-section {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            animation: fadeIn 0.5s ease-out;
-        }
-        
-        #settings-section, #about-section {
-            display: none; /* Hidden by default */
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .app-container {
-            width: 90%;
-            max-width: 450px;
-            text-align: center;
-        }
-
-        .logo-main {
-            font-size: 22px;
-            font-weight: 700;
-            margin: 20px 0;
-            text-shadow: 0 0 10px var(--neon-color);
-        }
-
-        /* --- BUTTON LIST --- */
-        .btn-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            width: 100%;
-        }
-
-        .play-store-btn {
-            display: flex;
-            align-items: center;
-            background: var(--card-bg);
-            border: 1px solid var(--neon-color);
-            border-radius: 15px;
-            padding: 12px;
-            text-decoration: none;
-            color: var(--neon-color);
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-glow);
-        }
-
-        .play-store-btn:hover {
-            transform: scale(1.02);
-            background: var(--neon-color);
-            color: #000;
-        }
-
-        .btn-img {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            object-fit: cover;
-            margin-right: 15px;
-            border: 1px solid var(--neon-color);
-        }
-
-        .btn-info { text-align: left; }
-        .btn-info .title { font-weight: 700; font-size: 16px; display: block; }
-        .btn-info .subtitle { font-size: 11px; opacity: 0.8; }
-
-        /* --- BOTTOM NAVIGATION BAR --- */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 75px;
-            background: var(--card-bg);
-            border-top: 2px solid var(--neon-color);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 3500;
-            box-shadow: 0 -5px 15px rgba(var(--neon-color), 0.2);
-            backdrop-filter: blur(10px);
-        }
-
-        .nav-item {
-            text-decoration: none;
-            color: var(--neon-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 60px;
-            transition: 0.3s;
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
-
-        .nav-item i { font-size: 24px; }
-        .nav-item span { font-size: 10px; margin-top: 4px; font-weight: 600; }
-
-        .nav-center-wrapper {
-            position: relative;
-            width: 85px;
-            height: 85px;
-            margin-top: -45px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: var(--bg-color);
-            border-radius: 50%;
-            border: 2px solid var(--neon-color);
-            box-shadow: var(--shadow-glow);
-            cursor: pointer;
-        }
-
-        .center-img {
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-            object-fit: cover;
-            z-index: 5;
-            border: 2px solid var(--neon-color);
-        }
-
-        .processing-ring {
-            position: absolute;
-            width: 75px;
-            height: 75px;
-            border-radius: 50%;
-            border: 3px dashed var(--neon-color);
-            animation: spin 5s linear infinite;
-            z-index: 2;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* --- SPLASH SCREEN --- */
-        .splash-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #000;
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            z-index: 5000;
-            transition: 0.8s;
-        }
-
-        .splash-screen.hide {
-            opacity: 0; pointer-events: none; transform: translateY(-100%);
-        }
-
-        .splash-text { font-size: 30px; color: #23FF02; font-weight: 700; text-shadow: 0 0 15px #23FF02; }
-
-        /* --- POPUP MENU --- */
-        .popup-menu {
-            position: fixed;
-            top: 80px; right: 20px;
-            width: 220px;
-            background: var(--popup-bg);
-            border: 2px solid var(--neon-color);
-            border-radius: 15px;
-            padding: 15px;
-            z-index: 2999;
-            transform: scale(0);
-            transform-origin: top right;
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            opacity: 0;
-        }
-
-        .popup-menu.active { transform: scale(1); opacity: 1; }
-        .menu-link {
-            text-decoration: none; color: var(--neon-color);
-            padding: 10px; border: 1px solid var(--neon-color);
-            border-radius: 8px; margin-bottom: 8px; display: block;
-            text-align: center; font-size: 14px;
-            cursor: pointer;
-        }
-
-        /* --- NEON MODAL ALERT --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(5px);
-            display: none; 
-            justify-content: center;
-            align-items: center;
-            z-index: 6000;
-        }
-
-        .modal-box {
-            width: 85%;
-            max-width: 320px;
-            background: #000;
-            border: 2px solid var(--neon-color);
-            border-radius: 20px;
-            padding: 30px 20px;
-            text-align: center;
-            box-shadow: 0 0 20px var(--neon-color);
-            transform: scale(0.7);
-            opacity: 0;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .modal-overlay.active { display: flex; }
-        .modal-overlay.active .modal-box { transform: scale(1); opacity: 1; }
-
-        .modal-box h2 {
-            font-size: 20px;
-            margin-bottom: 10px;
-            color: var(--neon-color);
-            text-shadow: 0 0 10px var(--neon-color);
-        }
-
-        .modal-box p {
-            font-size: 14px;
-            margin-bottom: 25px;
-            color: #fff;
-        }
-
-        .follow-btn {
-            display: block;
-            background: var(--neon-color);
-            color: #000;
-            padding: 12px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 700;
-            margin-bottom: 15px;
-            box-shadow: 0 0 15px var(--neon-color);
-            transition: 0.3s;
-        }
-
-        .follow-btn:hover { transform: scale(1.05); }
-
-        .skip-btn {
-            background: transparent;
-            border: 1px solid #555;
-            color: #888;
-            padding: 8px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
-            transition: 0.3s;
-        }
-
-        /* --- SETTINGS & ABOUT STYLES --- */
-        .info-card {
-            background: var(--card-bg);
-            border: 1px solid var(--neon-color);
-            border-radius: 15px;
-            padding: 20px;
-            width: 90%;
-            max-width: 450px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow-glow);
-            text-align: center;
-        }
-        .info-card h3 { margin-bottom: 10px; font-size: 18px; }
-        .info-card p { font-size: 13px; color: #ccc; margin-bottom: 15px; }
-
-    </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#667eea,#764ba2);
+    text-align:center;
+    padding:20px;
+    color:white;
+}
+.container{
+    background:white;
+    color:#333;
+    padding:20px;
+    border-radius:20px;
+    max-width:500px;
+    margin:auto;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+textarea{
+    width:95%;
+    height:120px;
+    border-radius:10px;
+    padding:10px;
+    border:1px solid #ccc;
+}
+button{
+    margin-top:10px;
+    padding:10px 20px;
+    border:none;
+    border-radius:20px;
+    background:#667eea;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+button:hover{
+    background:#5a67d8;
+}
+select{
+    margin-top:10px;
+    padding:8px;
+    border-radius:10px;
+}
+</style>
 </head>
+
 <body>
 
-    <!-- Splash Screen -->
-    <div class="splash-screen" id="splash">
-        <div class="splash-text">𝐃𝐓𝐙 𝐁𝐎𝐓 𝐒𝐓𝐎𝐑𝐄</div>
-        <div style="color: #23FF02; margin-top: 15px;"><i class="fas fa-circle-notch fa-spin fa-2x"></i></div>
-    </div>
+<h2>Voice Lesson Explainer 🎧📚</h2>
 
-    <!-- Neon Alert Modal -->
-    <div class="modal-overlay" id="followModal">
-        <div class="modal-box">
-            <h2>FOLLOW CHANNEL</h2>
-            <p>අලුත්ම තොරතුරු දැනගන්න අපගේ WhatsApp චැනලය හා සම්බන්ධ වන්න.</p>
-            <a href="https://whatsapp.com/channel/0029VaicB1MISTkGyQ7Bqe23" target="_blank" class="follow-btn">Follow Channel</a>
-            <button class="skip-btn" onclick="closeModal()">Skip</button>
-        </div>
-    </div>
+<div class="container">
 
-    <!-- Top Navigation -->
-    <div class="top-nav">
-        <button class="icon-btn" onclick="toggleTheme()">
-            <i class="fas fa-lightbulb" id="themeIcon"></i>
-        </button>
-        
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="සොයන්න (Search)..." onkeyup="filterButtons()">
-        </div>
+<textarea id="lessonText" placeholder="Type your lesson here..."></textarea><br>
 
-        <!-- Right Side Buttons -->
-        <div class="nav-right-btns">
-            <button class="icon-btn" onclick="toggleMenu()">
-                <i class="fas fa-bars"></i>
-            </button>
-            <button class="icon-btn" id="rainbowBtn" onclick="toggleRainbow()" title="Change Color">
-                <i class="fas fa-palette"></i>
-            </button>
-        </div>
-    </div>
+<select id="language">
+<option value="en-US">English</option>
+<option value="si-LK">Sinhala</option>
+</select><br>
 
-    <!-- Popup Menu (Updated logic) -->
-    <div class="popup-menu" id="popupMenu">
-        <div class="menu-link" onclick="handleMenuRedirect()">Owner</div>
-        <div class="menu-link" onclick="handleMenuRedirect()">WhatsApp Group</div>
-        <div class="menu-link" onclick="handleMenuRedirect()">YouTube Channel</div>
-    </div>
+<button onclick="speakLesson()">Explain with Voice 🔊</button>
+<button onclick="stopVoice()">Stop ⛔</button>
 
-    <!-- Main Content -->
-    <div class="content-area">
-        
-        <!-- HOME SECTION -->
-        <div id="home-section" class="page-section">
-            <div class="app-container">
-                <div class="logo-main">DTZ STORE ALL BOT</div>
-                <div class="btn-list" id="buttonList">
-                    
-                    <!-- Buttons -->
-                    <a href="https://new-updatev3-a730f28f417e.herokuapp.com/" class="play-store-btn">
-                        <img src="https://files.catbox.moe/q7a9q9.jpeg" class="btn-img">
-                        <div class="btn-info">
-                            <span class="title">QUEEN RASHU MINI BOT</span>
-                            <span class="subtitle">𝐎ᴡɴᴇʀ 𝐀ɴᴅ 𝐂ʀᴇᴀᴛᴏʀ : ᴅᴛᴢ ᴛᴍ</span>
-                        </div>
-                    </a>
+</div>
 
-                    <a href="https://darktechzone.site/pair-web" class="play-store-btn">
-                        <img src="https://i.ibb.co/HL9CMt2C/IMG-20260212-WA0123.jpg" class="btn-img">
-                        <div class="btn-info">
-                            <span class="title">DTZ MINI BOT</span>
-                            <span class="subtitle">𝐎ᴡɴᴇʀ 𝐀ꜱʜᴜ & 𝐃ɪɴᴀ : ᴅᴛᴢ ᴛᴍ</span>
-                        </div>
-                    </a>
-                    
-                    <a href="https://darktechzone.site/dtzcrasher" class="play-store-btn">
-                        <img src="https://i.ibb.co/LhzJYkYD/IMG-20260212-WA0121.jpg" class="btn-img">
-                        <div class="btn-info">
-                            <span class="title">DTZ CRASHER MINI BOT</span>
-                            <span class="subtitle">𝐎ᴡɴᴇʀ 𝐀ꜱʜᴜ & 𝐃ɪɴᴀ : ᴅᴛᴢ ᴛᴍ</span>
-                        </div>
-                    </a>
-                    
-                    <a href="https://gotukola.site" class="play-store-btn">
-                        <img src="https://i.ibb.co/kg9tY1sd/IMG-20260212-WA0093.jpg" class="btn-img">
-                        <div class="btn-info">
-                            <span class="title">GOTU KOLAYA MINI BOT</span>
-                            <span class="subtitle">𝐎ᴡɴᴇʀ 𝐂ʜᴀᴍᴏᴅ : ᴅᴛᴢ ᴛᴍ</span>
-                        </div>
-                    </a>
-                    
-                    <a href="https://queen-ashi-main-site.netlify.app" class="play-store-btn">
-                        <img src="https://i.ibb.co/SwzsVBGC/IMG-20260212-WA0127.jpg" class="btn-img">
-                        <div class="btn-info">
-                            <span class="title">ASHI MD MINI BOT</span>
-                            <span class="subtitle">𝐎ᴡɴᴇʀ 𝐀ʙᴅᴜʟ 𝐊ᴀʟᴀᴍ : ᴅᴛᴢ ᴛᴍ</span>
-                        </div>
-                    </a>
-                    
-                    <a href="https://two-bot-mini-rashu-4613fb8a471b.herokuapp.com/" class="play-store-btn">
-                        <img src="https://i.ibb.co/1G8pS4Dn/IMG-20260212-WA0130.jpg" class="btn-img">
-                        <div class="btn-info">
-                            <span class="title">DTZ LITE PRO MINI BOT</span>
-                            <span class="subtitle">𝐎ᴡɴᴇʀ 𝐂ʏʙᴇʀ 𝐇ᴜɴᴛᴇʀ : ᴅᴛᴢ ᴛᴍ</span>
-                        </div>
-                    </a>
-                    
-                    <a href="https://two-bot-mini-rashu-4613fb8a471b.herokuapp.com/" class="play-store-btn">
-                        <img src="https://files.catbox.moe/q7a9q9.jpeg" class="btn-img">
-                        <div class="btn-info">
-                            <span class="title">RASHU BOT V2</span>
-                            <span class="subtitle">බොට් පද්ධතිය ක්‍රියාත්මක කරන්න</span>
-                        </div>
-                    </a>
+<script>
+let speech;
 
-                    <a href="https://two-bot-mini-rashu-4613fb8a471b.herokuapp.com/" class="play-store-btn">
-                        <img src="https://i.ibb.co/21KQvsvr/20260110-222028-2.jpg" class="btn-img">
-                        <div class="btn-info">
-                            <span class="title">New Updates</span>
-                            <span class="subtitle">අලුත්ම තොරතුරු</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
+function speakLesson(){
+    let text = document.getElementById("lessonText").value;
+    let lang = document.getElementById("language").value;
 
-        <!-- SETTINGS SECTION -->
-        <div id="settings-section" class="page-section">
-            <div class="logo-main">DTZ STORE SETTING</div>
-            <div class="info-card">
-                <h3>App Settings</h3>
-                <p>Theme customization and notifications</p>
-                <div class="play-store-btn" onclick="toggleTheme()" style="justify-content: center; cursor: pointer;">
-                    Switch Theme Mode
-                </div>
-                <br>
-                <div class="play-store-btn" onclick="toggleRainbow()" style="justify-content: center; cursor: pointer;">
-                    Enable RGB Mode
-                </div>
-            </div>
-            <div class="info-card">
-                <h3>Version</h3>
-                <p>DTZ Store v2.5.0</p>
-            </div>
-        </div>
+    if(text.trim() === ""){
+        alert("Please enter lesson text 📚");
+        return;
+    }
 
-        <!-- ABOUT SECTION -->
-        <div id="about-section" class="page-section">
-            <div class="logo-main">DTZ STORE ABOUT</div>
-            <div class="info-card">
-                <img src="https://i.ibb.co/FLrzgBfT/20260212-173935.png" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--neon-color); margin-bottom: 10px;">
-                <h3>Developed By DTZ TEAM</h3>
-                <p>We provide the best WhatsApp Bots and Tools for Sri Lankan users.</p>
-                <p>Contact us for more details.</p>
-                <a href="https://whatsapp.com/channel/0029VaicB1MISTkGyQ7Bqe23" class="play-store-btn" style="justify-content: center;">
-                    Contact Support
-                </a>
-            </div>
-        </div>
+    speech = new SpeechSynthesisUtterance(text);
+    speech.lang = lang;
+    speech.rate = 1;
+    speech.pitch = 1;
 
-    </div>
+    window.speechSynthesis.speak(speech);
+}
 
-    <!-- Bottom Navigation Bar (Updated) -->
-    <div class="bottom-nav">
-        <button class="nav-item" onclick="showPage('settings')">
-            <i class="fas fa-cog"></i>
-            <span>Settings</span>
-        </button>
+function stopVoice(){
+    window.speechSynthesis.cancel();
+}
+</script>
 
-        <div class="nav-center-wrapper" onclick="showPage('home')">
-            <div class="processing-ring"></div>
-            <img src="https://i.ibb.co/FLrzgBfT/20260212-173935.png" alt="Center" class="center-img">
-        </div>
-
-        <button class="nav-item" onclick="showPage('about')">
-            <i class="fas fa-user-shield"></i>
-            <span>About</span>
-        </button>
-    </div>
-
-    <script>
-        // --- Color Changing Logic ---
-        let rainbowInterval = null;
-        let colorIndex = 0;
-        const colors = ["#23FF02", "#FF0000", "#00FFFF", "#FFFF00", "#FF00FF", "#FF8000", "#0080FF", "#FF007F", "#8000FF", "#FFFFFF"];
-
-        function toggleRainbow() {
-            const btn = document.getElementById('rainbowBtn');
-            if (rainbowInterval) {
-                clearInterval(rainbowInterval);
-                rainbowInterval = null;
-                document.documentElement.style.setProperty('--neon-color', "#23FF02");
-                btn.style.boxShadow = "0 0 10px #23FF02";
-            } else {
-                rainbowInterval = setInterval(() => {
-                    document.documentElement.style.setProperty('--neon-color', colors[colorIndex]);
-                    colorIndex = (colorIndex + 1) % colors.length;
-                }, 1500);
-                btn.style.boxShadow = "0 0 20px white";
-            }
-        }
-
-        // Hide Splash Screen & Show Neon Alert
-        setTimeout(() => {
-            document.getElementById('splash').classList.add('hide');
-            setTimeout(() => {
-                document.getElementById('followModal').classList.add('active');
-            }, 500);
-        }, 3000);
-
-        function closeModal() {
-            document.getElementById('followModal').classList.remove('active');
-        }
-
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            const icon = document.getElementById('themeIcon');
-            if(document.body.classList.contains('light-mode')) {
-                icon.classList.replace('fa-lightbulb', 'fa-moon');
-            } else {
-                icon.classList.replace('fa-moon', 'fa-lightbulb');
-            }
-        }
-
-        function toggleMenu() {
-            document.getElementById('popupMenu').classList.toggle('active');
-        }
-
-        // --- NEW: Handle Popup Menu Redirects ---
-        function handleMenuRedirect() {
-            // Close menu
-            document.getElementById('popupMenu').classList.remove('active');
-            // Show Alert
-            alert("External Link වෙත Redirect වෙමින් පවතී...");
-            // Redirect
-            window.location.href = "https://two-bot-mini-rashu-4613fb8a471b.herokuapp.com/";
-        }
-
-        // --- NEW: Improved Search Function ---
-        function filterButtons() {
-            // Switch to home if searching
-            showPage('home');
-            
-            let input = document.getElementById('searchInput').value.toLowerCase();
-            let buttons = document.getElementsByClassName('play-store-btn');
-            
-            for (let i = 0; i < buttons.length; i++) {
-                // Get all text inside the button (Title + Subtitle)
-                let textContent = buttons[i].innerText.toLowerCase();
-                
-                // Check if input exists in text
-                if (textContent.includes(input)) {
-                    buttons[i].style.display = "flex";
-                } else {
-                    buttons[i].style.display = "none";
-                }
-            }
-        }
-
-        // --- NEW: Page Navigation (Home, Settings, About) ---
-        function showPage(pageId) {
-            // Hide all sections
-            document.getElementById('home-section').style.display = 'none';
-            document.getElementById('settings-section').style.display = 'none';
-            document.getElementById('about-section').style.display = 'none';
-
-            // Show selected section
-            document.getElementById(pageId + '-section').style.display = 'flex';
-            
-            // Scroll to top
-            document.querySelector('.content-area').scrollTop = 0;
-        }
-
-        // Initialize Home
-        document.getElementById('home-section').style.display = 'flex';
-
-        window.onclick = function(event) {
-            if (!event.target.closest('.icon-btn') && !event.target.closest('.popup-menu')) {
-                document.getElementById('popupMenu').classList.remove('active');
-            }
-        }
-    </script>
 </body>
 </html>
