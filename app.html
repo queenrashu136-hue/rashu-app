@@ -3,94 +3,139 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Voice Lesson Explainer 🎧</title>
-
+<title>Sri Lanka Services Directory</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
-body{
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg,#667eea,#764ba2);
-    text-align:center;
-    padding:20px;
-    color:white;
-}
-.container{
-    background:white;
-    color:#333;
-    padding:20px;
-    border-radius:20px;
-    max-width:500px;
-    margin:auto;
-    box-shadow:0 10px 25px rgba(0,0,0,0.3);
-}
-textarea{
-    width:95%;
-    height:120px;
-    border-radius:10px;
-    padding:10px;
-    border:1px solid #ccc;
-}
-button{
-    margin-top:10px;
-    padding:10px 20px;
-    border:none;
-    border-radius:20px;
-    background:#667eea;
-    color:white;
-    font-size:16px;
-    cursor:pointer;
-}
-button:hover{
-    background:#5a67d8;
-}
-select{
-    margin-top:10px;
-    padding:8px;
-    border-radius:10px;
-}
+    body { font-family: 'Arial', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
+    h1 { text-align: center; margin-bottom: 10px; }
+    .controls { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+    input, select { padding: 8px 12px; font-size: 16px; border-radius: 6px; border: 1px solid #ccc; }
+    .category { margin-bottom: 20px; }
+    .category h2 { margin-bottom: 10px; font-size: 20px; color: #333; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+    .services-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+    .service-card { background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 10px; transition: transform 0.2s; }
+    .service-card:hover { transform: translateY(-3px); }
+    .service-card i { font-size: 24px; color: #4a90e2; min-width: 30px; text-align: center; }
+    .service-card button { margin-left:auto; padding:5px 10px; border:none; border-radius:5px; background:#4a90e2; color:#fff; cursor:pointer; transition:0.2s; }
+    .service-card button:hover { background:#357ABD; }
+    @media(max-width:500px){ .services-container { grid-template-columns:1fr; } }
 </style>
 </head>
-
 <body>
 
-<h2>Voice Lesson Explainer 🎧📚</h2>
+<h1 id="title">Sri Lanka Services</h1>
 
-<div class="container">
-
-<textarea id="lessonText" placeholder="Type your lesson here..."></textarea><br>
-
-<select id="language">
-<option value="en-US">English</option>
-<option value="si-LK">Sinhala</option>
-</select><br>
-
-<button onclick="speakLesson()">Explain with Voice 🔊</button>
-<button onclick="stopVoice()">Stop ⛔</button>
-
+<div class="controls">
+    <input type="text" id="search" placeholder="Search Services...">
+    <select id="lang">
+        <option value="en">English</option>
+        <option value="si">සිංහල</option>
+        <option value="ta">தமிழ்</option>
+    </select>
 </div>
 
+<div id="categories"></div>
+
 <script>
-let speech;
-
-function speakLesson(){
-    let text = document.getElementById("lessonText").value;
-    let lang = document.getElementById("language").value;
-
-    if(text.trim() === ""){
-        alert("Please enter lesson text 📚");
-        return;
+// Services Data with categories & icons
+const servicesData = [
+    {
+        category: { en: "Bills", si: "බිල්පත්", ta: "பில்ல்கள்" },
+        services: [
+            { en: "Electricity Bill Payment", si: "විදුලි බිල්පත් ගෙවීම", ta: "மின்சார பில்ல்கள் கட்டணம்", icon: "fa-bolt", pay:true },
+            { en: "Water Bill Payment", si: "ජල බිල්පත් ගෙවීම", ta: "தண்ணீர் பில்ல்கள் கட்டணம்", icon: "fa-tint", pay:true }
+        ]
+    },
+    {
+        category: { en: "Transport", si: "ප්‍රවාහන", ta: "போக்குவரத்து" },
+        services: [
+            { en: "Bus Ticket Booking", si: "බස් ටිකට් වෙන් කිරීම", ta: "பஸ்ஸுக்கான டிக்கெட் முன்பதிவு", icon: "fa-bus", pay:false },
+            { en: "Train Ticket Booking", si: "දුම්රිය ටිකට් වෙන් කිරීම", ta: "ரயிலுக்கான டிக்கெட் முன்பதிவு", icon: "fa-train", pay:false }
+        ]
+    },
+    {
+        category: { en: "Government & Banks", si: "රාජ්‍ය සහ බැංකු", ta: "அரசு மற்றும் வங்கி" },
+        services: [
+            { en: "Government Services", si: "රාජ්‍ය සේවාවන්", ta: "அரசு சேவைகள்", icon: "fa-landmark", pay:false },
+            { en: "Bank Services", si: "බැංකු සේවාවන්", ta: "வங்கித் சேவைகள்", icon: "fa-university", pay:false }
+        ]
+    },
+    {
+        category: { en: "Health", si: "සෞඛ්‍ය", ta: "சுகாதார" },
+        services: [
+            { en: "Health Services", si: "සෞඛ්‍ය සේවාවන්", ta: "சுகாதார சேவைகள்", icon: "fa-heartbeat", pay:false }
+        ]
     }
+];
 
-    speech = new SpeechSynthesisUtterance(text);
-    speech.lang = lang;
-    speech.rate = 1;
-    speech.pitch = 1;
+let currentLang = 'en';
 
-    window.speechSynthesis.speak(speech);
+// Render function
+function renderServices() {
+    const container = document.getElementById("categories");
+    const searchTerm = document.getElementById("search").value.toLowerCase();
+    container.innerHTML = "";
+
+    servicesData.forEach(cat => {
+        const filteredServices = cat.services.filter(s => s[currentLang].toLowerCase().includes(searchTerm));
+        if(filteredServices.length === 0) return;
+
+        const catDiv = document.createElement("div");
+        catDiv.className = "category";
+
+        const catTitle = document.createElement("h2");
+        catTitle.textContent = cat.category[currentLang];
+        catDiv.appendChild(catTitle);
+
+        const servicesGrid = document.createElement("div");
+        servicesGrid.className = "services-container";
+
+        filteredServices.forEach(service => {
+            const card = document.createElement("div");
+            card.className = "service-card";
+
+            const icon = document.createElement("i");
+            icon.className = `fa-solid ${service.icon}`;
+            card.appendChild(icon);
+
+            const text = document.createElement("span");
+            text.textContent = service[currentLang];
+            card.appendChild(text);
+
+            if(service.pay) {
+                const btn = document.createElement("button");
+                btn.textContent = "Pay";
+                btn.onclick = () => payHereDemo(service[currentLang]);
+                card.appendChild(btn);
+            }
+
+            servicesGrid.appendChild(card);
+        });
+
+        catDiv.appendChild(servicesGrid);
+        container.appendChild(catDiv);
+    });
 }
 
-function stopVoice(){
-    window.speechSynthesis.cancel();
+// Dummy Payment / PayHere demo function
+function payHereDemo(serviceName) {
+    // Sandbox mode URL for PayHere
+    const payUrl = `https://sandbox.payhere.lk/pay/`; // Replace with real API integration if needed
+    alert(`You clicked Pay for ${serviceName}.\nThis is a demo. Real payment requires API keys.`);
+    window.open(payUrl, "_blank");
 }
+
+// Initial render
+renderServices();
+
+// Language switch
+document.getElementById("lang").addEventListener("change", e => {
+    currentLang = e.target.value;
+    renderServices();
+});
+
+// Search filter
+document.getElementById("search").addEventListener("input", renderServices);
 </script>
 
 </body>
